@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:budgetmaster/loginS.dart';
+
 
 void main() {
   runApp(const Login());
@@ -11,8 +13,11 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFFFFFFF),
         // This is the theme of your application.
         //
         // TRY THIS: Try running your application with "flutter run". You'll see
@@ -28,22 +33,32 @@ class Login extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.purple,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+
       ),
+
       home: Scaffold(
         appBar: AppBar(
+          backgroundColor: const Color(0xFF7B1FA2),
           centerTitle: true,
-          title: Text(
-            "Inicio de Sesión",
+          title: const Text(
+            'Inicio de Sesión',
+            style: TextStyle(
+              fontSize: 25,
+              color: Colors.white,
+            ),
           ),
         ),
-         body: Container(),
+
+         body: const LoginScreen(),
       ),
     );
   }
 }
+
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

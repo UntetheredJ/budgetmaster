@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:budgetmaster/createAccount.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,12 +12,13 @@ class LoginScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const Icon(Icons.account_circle , size: 90, color: Colors.deepPurpleAccent,),
               const Text(
                 "Budget Master",
                 style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.w900,
-                  color: Colors.teal,
+                  color: Colors.deepPurple,
                 ),
               ),
               const SizedBox(
@@ -25,7 +27,7 @@ class LoginScreen extends StatelessWidget {
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
-                  labelText: "Ingresa correo electrónico",
+                  labelText: "Correo electrónico",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.email),
                 ),
@@ -37,7 +39,7 @@ class LoginScreen extends StatelessWidget {
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
                 decoration: const InputDecoration(
-                  labelText: "Ingresa la contraseña",
+                  labelText: "Contraseña",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.lock),
                   suffixIcon: Icon(Icons.remove_red_eye),
@@ -49,9 +51,11 @@ class LoginScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment:  MainAxisAlignment.end,
                 children: [
-                  TextButton(onPressed: (){}, child: const Text(
+                  TextButton(onPressed: (){ }, child: const Text(
                       "¿Olvidaste tu contraseña?"
+
                   ))
+
                 ],
               ),
               const SizedBox(
@@ -62,7 +66,9 @@ class LoginScreen extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
-                  gradient: const LinearGradient(colors: [Colors.blue, Colors.purple]),
+                  gradient: const LinearGradient(colors: [Colors.blue, Colors.purple],  begin: Alignment.topRight,
+                    end: Alignment.bottomLeft),
+
                 ),
                 child: MaterialButton(
                   onPressed: (){},
@@ -78,7 +84,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const Icon(Icons.fingerprint , size: 60, color: Colors.teal,),
+
               const SizedBox(
                 height: 10,
               ),
@@ -100,17 +106,12 @@ class LoginScreen extends StatelessWidget {
                     ),
 
                   ),
-                  TextButton(onPressed: (){}, child: const Text(
+                  TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateAccount(),),);}, child: const Text(
                       "Regístrate aquí"
                   ))
+
                 ],
               ),
-
-
-
-
-              
-
             ],
           ),
         ),
