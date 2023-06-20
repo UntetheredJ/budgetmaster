@@ -1,9 +1,14 @@
 import 'package:budgetmaster/home_page.dart';
+import 'package:budgetmaster/db/postgressConnection.dart';
+import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetmaster/create_account.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  var correoController = TextEditingController();
+  var contrasennaController = TextEditingController();
+
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +36,7 @@ class LoginScreen extends StatelessWidget {
                 height: 25,
               ),
               TextFormField(
+                controller: correoController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   labelText: "Correo electrónico",
@@ -42,6 +48,7 @@ class LoginScreen extends StatelessWidget {
                 height: 25,
               ),
               TextFormField(
+                controller: contrasennaController,
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
                 decoration: const InputDecoration(
@@ -76,13 +83,17 @@ class LoginScreen extends StatelessWidget {
                       end: Alignment.bottomLeft),
                 ),
                 child: MaterialButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ),
-                    );
+                  onPressed: () async {
+                    String correo = correoController.text;
+                    String contrasenna = contrasennaController.text;
+                    Usuario usuario = Usuario.sinDatos();
+                    usuario = await iniciarSesion(correo, contrasenna);
+                    if (correo == usuario.correo && contrasenna == usuario.contrasenna) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage(),),);
+                    } else {
+                      debugPrint("Error");
+                    }
                   },
                   child: const Text(
                     "Iniciar sesión",
