@@ -10,10 +10,10 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends  State<HomePage>{
-  int index=1;
+class _HomePageState extends State<HomePage> {
+  int index = 1;
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {         
     return Scaffold(
       backgroundColor: Colors.deepPurple,
       bottomNavigationBar: CurvedNavigationBar(
@@ -41,26 +41,25 @@ class _HomePageState extends  State<HomePage>{
           child: getSelectedWidget(index: index)
       ),
     );
-
   }
 
-Widget getSelectedWidget({required int index}){
-  Widget widget;
-  switch(index){
-    case 0:
-      widget = const Ini();
-      break;
-    case 1:
-      widget = const Ini();
-      break;
-    case 2:
-      widget = const Conf();
-      break;
+  Widget getSelectedWidget({required int index}) {
+    Widget widget;
+    switch (index) {
+      case 0:
+        widget = const Inicio();
+        break;
+      case 1:
+        widget = const Inicio();
+        break;
+      case 2:
+        widget = const Configuracion();
+        break;
 
       default:
-    widget = const Ini();
-    break;
+        widget = const Inicio();
+        break;
+    }
+    return widget;
   }
-  return widget;
-}
 }

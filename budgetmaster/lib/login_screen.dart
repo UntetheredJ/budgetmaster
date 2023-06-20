@@ -90,7 +90,7 @@ class LoginScreen extends StatelessWidget {
                     usuario = await iniciarSesion(correo, contrasenna);
                     if (correo == usuario.correo && contrasenna == usuario.contrasenna) {
                       // ignore: use_build_context_synchronously
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage(),),);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage(),),);
                     } else {
                       debugPrint("Error");
                     }
