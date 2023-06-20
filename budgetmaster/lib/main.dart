@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:budgetmaster/loginS.dart';
-
+import 'package:budgetmaster/login_screen.dart';
 
 void main() {
   runApp(const Login());
@@ -13,7 +12,6 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -36,9 +34,7 @@ class Login extends StatelessWidget {
         primarySwatch: Colors.purple,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-
       ),
-
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFF7B1FA2),
@@ -51,14 +47,11 @@ class Login extends StatelessWidget {
             ),
           ),
         ),
-
-         body: const LoginScreen(),
+        body: const LoginScreen(),
       ),
     );
   }
 }
-
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

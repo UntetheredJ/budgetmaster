@@ -1,6 +1,6 @@
-import 'package:budgetmaster/homePage.dart';
+import 'package:budgetmaster/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:budgetmaster/createAccount.dart';
+import 'package:budgetmaster/create_account.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
