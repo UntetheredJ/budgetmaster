@@ -1,3 +1,4 @@
+import 'package:budgetmaster/homePage.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetmaster/createAccount.dart';
 
@@ -71,7 +72,7 @@ class LoginScreen extends StatelessWidget {
 
                 ),
                 child: MaterialButton(
-                  onPressed: (){},
+                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage(),),);},
                   child: const Text(
                     "Iniciar sesión",
                     style: TextStyle(
