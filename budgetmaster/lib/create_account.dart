@@ -1,4 +1,6 @@
+import 'package:budgetmaster/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:budgetmaster/db/postgressConnection.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -12,6 +14,12 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  var usuarioController = TextEditingController();
+  var nombreController = TextEditingController();
+  var correoController = TextEditingController();
+  var contrasennaController1 = TextEditingController();
+  var contrasennaController2 = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +59,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     height: 25,
                   ),
                   TextFormField(
+                    controller: nombreController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       labelText: "Nombre",
@@ -62,6 +71,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     height: 25,
                   ),
                   TextFormField(
+                    controller: usuarioController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       labelText: "Usuario",
@@ -73,6 +83,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     height: 25,
                   ),
                   TextFormField(
+                    controller: correoController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       labelText: "Correo electrónico",
@@ -84,6 +95,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     height: 25,
                   ),
                   TextFormField(
+                    controller: contrasennaController1,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     decoration: const InputDecoration(
@@ -97,6 +109,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     height: 25,
                   ),
                   TextFormField(
+                    controller: contrasennaController2,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     decoration: const InputDecoration(
@@ -120,7 +133,70 @@ class _CreateAccountState extends State<CreateAccount> {
                           end: Alignment.bottomLeft),
                     ),
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        String nombre = nombreController.text;
+                        String usuario = usuarioController.text;
+                        String correo = correoController.text;
+                        String contrasenna1 = contrasennaController1.text;
+                        String contrasenna2 = contrasennaController2.text;
+                        if (contrasenna1 == contrasenna2) {
+                          int valor = await registroUsuario(usuario, nombre, correo, contrasenna1);
+                          if (valor == 1) {
+                            // ignore: use_build_context_synchronously
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Correcto"),
+                                  content: Text("Se ha creado correctamente"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text("Ok"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            // ignore: use_build_context_synchronously
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const AlertDialog(
+                                    title: Text("Ocurrio un error"),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: [
+                                          Text("No se pudo crear")
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }
+                            );
+                          }
+                        } else {
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const AlertDialog(
+                                  title: Text("Alerta"),
+                                  content: SingleChildScrollView(
+                                    child: ListBody(
+                                      children: [
+                                        Text("Incosistencia en contraseña")
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                          );
+                        }
+                      },
                       child: const Text(
                         "Crear Cuenta",
                         style: TextStyle(

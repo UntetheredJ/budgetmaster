@@ -92,7 +92,22 @@ class LoginScreen extends StatelessWidget {
                       // ignore: use_build_context_synchronously
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage(),),);
                     } else {
-                      debugPrint("Error");
+                      // ignore: use_build_context_synchronously
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialog(
+                              title: Text("No se pude ingresear"),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: [
+                                    Text("Verificar sus datos")
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                      );
                     }
                   },
                   child: const Text(
