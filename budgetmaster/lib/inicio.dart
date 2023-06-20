@@ -1,24 +1,53 @@
 import 'package:flutter/material.dart';
 
-class Ini extends StatelessWidget {
-  const Ini({Key? key}) : super(key: key);
+class Inicio extends StatelessWidget {
+  const Inicio({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(24.0),
-      child: Column(
-        children: [
-          Text('Inicio', style: TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold),),
-          SizedBox(height: 100,),
-          CircleAvatar(
-            radius: 70,
-            child: Icon(Icons.people, size: 120,),
-          ),
-          SizedBox(height: 100,),
-          Text('Contenido', style: TextStyle(fontSize: 30, color: Colors.white),),
-        ],
-      ),
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF7B1FA2),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: const Text("Inicio",
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.white,
+              )),
+        ),
+        body: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                child: Center(
+                    child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Hola ",
+                                  style: TextStyle(
+                                    fontSize: 35,
+                                    color: Colors.black.withOpacity(0.7),
+                                  ),
+                                ),
+                                const Text(
+                                  "Juan David",
+                                  style: TextStyle(
+                                    fontSize: 35,
+                                    color: Colors.purple,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        )
+                    )
+                )
+            ),
+        ),
     );
   }
 }
