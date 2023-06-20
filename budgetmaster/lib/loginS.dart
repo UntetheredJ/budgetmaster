@@ -8,12 +8,16 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const Icon(Icons.account_circle , size: 90, color: Colors.deepPurpleAccent,),
+              const Icon(
+                Icons.account_circle,
+                size: 90,
+                color: Colors.deepPurpleAccent,
+              ),
               const Text(
                 "Budget Master",
                 style: TextStyle(
@@ -21,6 +25,7 @@ class LoginScreen extends StatelessWidget {
                   fontWeight: FontWeight.w900,
                   color: Colors.deepPurple,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 25,
@@ -50,13 +55,11 @@ class LoginScreen extends StatelessWidget {
                 height: 5,
               ),
               Row(
-                mainAxisAlignment:  MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(onPressed: (){ }, child: const Text(
-                      "¿Olvidaste tu contraseña?"
-
-                  ))
-
+                  TextButton(
+                      onPressed: () {},
+                      child: const Text("¿Olvidaste tu contraseña?"))
                 ],
               ),
               const SizedBox(
@@ -67,12 +70,20 @@ class LoginScreen extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
-                  gradient: const LinearGradient(colors: [Colors.blue, Colors.purple],  begin: Alignment.topRight,
-                    end: Alignment.bottomLeft),
-
+                  gradient: const LinearGradient(
+                      colors: [Colors.blue, Colors.purple],
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft),
                 ),
                 child: MaterialButton(
-                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage(),),);},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
+                  },
                   child: const Text(
                     "Iniciar sesión",
                     style: TextStyle(
@@ -85,7 +96,6 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-
               const SizedBox(
                 height: 10,
               ),
@@ -96,21 +106,25 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-
               Row(
-                mainAxisAlignment:  MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "¿No tienes una cuenta?",
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.7),
                     ),
-
                   ),
-                  TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateAccount(),),);}, child: const Text(
-                      "Regístrate aquí"
-                  ))
-
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CreateAccount(),
+                          ),
+                        );
+                      },
+                      child: const Text("Regístrate aquí"))
                 ],
               ),
             ],
