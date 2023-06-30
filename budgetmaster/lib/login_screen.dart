@@ -97,7 +97,7 @@ class LoginScreen extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return const AlertDialog(
-                              title: Text("No se pude ingresear"),
+                              title: Text("No se puede ingresar"),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: [
