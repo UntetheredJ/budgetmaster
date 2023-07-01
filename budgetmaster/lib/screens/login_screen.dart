@@ -1,12 +1,17 @@
-import 'package:budgetmaster/home_page.dart';
-import 'package:budgetmaster/db/postgressConnection.dart';
+import 'package:budgetmaster/db/supabaseConnection.dart';
+import 'package:budgetmaster/screens/home_page.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/material.dart';
-import 'package:budgetmaster/create_account.dart';
+import 'package:budgetmaster/screens/create_account.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatelessWidget {
   var correoController = TextEditingController();
   var contrasennaController = TextEditingController();
+
+  // Iniciar instancia de base de datos
+  var supabase = Connection();
+  final cliente = Supabase.instance.client;
 
   LoginScreen({Key? key}) : super(key: key);
 
@@ -87,10 +92,11 @@ class LoginScreen extends StatelessWidget {
                     String correo = correoController.text;
                     String contrasenna = contrasennaController.text;
                     Usuario usuario = Usuario.sinDatos();
-                    usuario = await iniciarSesion(correo, contrasenna);
-                    if (correo == usuario.correo && contrasenna == usuario.contrasenna) {
+                    usuario = await login(correo, contrasenna);
+                    if (correo == usuario.usuario && contrasenna == usuario.contrasenna) {
                       // ignore: use_build_context_synchronously
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage(),),);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+                       HomePage(usuario: usuario),),);
                     } else {
                       // ignore: use_build_context_synchronously
                       showDialog(
@@ -158,5 +164,34 @@ class LoginScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<Usuario> login(String correo, String contrasenna) async {
+    Usuario usuario = Usuario.sinDatos();
+    try {
+      final data = await cliente
+          .from('usuario')
+          .select()
+          .eq('usuario', correo)
+          .eq('contrasenna', contrasenna);
+      if (data.isNotEmpty) {
+        Map<String, dynamic> dato = data[0];
+        usuario = Usuario(
+            dato['id_usuario'],
+            dato['nombre'],
+            dato['usuario'],
+            dato['contrasenna'],
+            dato['saldo_total'],
+            dato['total_ahorrado']
+        );
+        debugPrint("Correcto");
+        return usuario;
+      } else {
+        return usuario;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return usuario;
+    }
   }
 }

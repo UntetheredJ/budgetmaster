@@ -1,6 +1,7 @@
-import 'package:budgetmaster/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:budgetmaster/db/postgressConnection.dart';
+import 'package:budgetmaster/db/supabaseConnection.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:budgetmaster/functions.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -16,9 +17,12 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   var usuarioController = TextEditingController();
   var nombreController = TextEditingController();
-  var correoController = TextEditingController();
   var contrasennaController1 = TextEditingController();
   var contrasennaController2 = TextEditingController();
+
+  // Iniciar instancia de base de datos
+  var supabase = Connection();
+  final cliente = Supabase.instance.client;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +87,6 @@ class _CreateAccountState extends State<CreateAccount> {
                     height: 25,
                   ),
                   TextFormField(
-                    controller: correoController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       labelText: "Correo electrónico",
@@ -136,11 +139,10 @@ class _CreateAccountState extends State<CreateAccount> {
                       onPressed: () async {
                         String nombre = nombreController.text;
                         String usuario = usuarioController.text;
-                        String correo = correoController.text;
                         String contrasenna1 = contrasennaController1.text;
                         String contrasenna2 = contrasennaController2.text;
                         if (contrasenna1 == contrasenna2) {
-                          int valor = await registroUsuario(usuario, nombre, correo, contrasenna1);
+                          int valor = await registroUsuario(nombre, usuario, contrasenna1);
                           if (valor == 1) {
                             // ignore: use_build_context_synchronously
                             showDialog(
@@ -213,5 +215,22 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ),
     );
+  }
+
+  Future<int> registroUsuario(String nombre, String usuario, String contrasenna) async {
+    try {
+      var id = randomDigits(10);
+      await cliente
+          .from('usuario')
+          .insert(
+            {'id_usuario':id, 'nombre':nombre, 'usuario':usuario, 'contrasenna':contrasenna, 'saldo_total':0, 'total_ahorrado':0}
+          );
+      debugPrint(id);
+      debugPrint("Correcto");
+      return 1;
+    } catch (e) {
+      debugPrint(e.toString());
+      return 0;
+    }
   }
 }

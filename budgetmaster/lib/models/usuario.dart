@@ -1,22 +1,20 @@
-
-import 'package:budgetmaster/db/postgressConnection.dart';
-import 'package:flutter/cupertino.dart';
-
 class Usuario{
   String id_usario;
-  String usuario;
   String nombre;
-  String correo;
+  String usuario;
   String contrasenna;
+  int saldo_total;
+  int total_ahorrado;
 
   Usuario(
       this.id_usario,
-      this.usuario,
       this.nombre,
-      this.correo,
+      this.usuario,
       this.contrasenna,
+      this.saldo_total,
+      this.total_ahorrado
       );
 
   Usuario.sinDatos():
-      id_usario = 'null', usuario = 'null', nombre = 'null', correo = 'null', contrasenna = 'null';
+      id_usario = 'null', nombre = 'null', usuario = 'null', contrasenna = 'null', saldo_total = 0, total_ahorrado = 0;
 }

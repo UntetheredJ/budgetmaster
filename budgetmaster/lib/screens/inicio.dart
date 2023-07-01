@@ -1,7 +1,9 @@
+import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/material.dart';
 
 class Inicio extends StatelessWidget {
-  const Inicio({Key? key}) : super(key: key);
+  final Usuario usuario;
+  const Inicio({Key? key, required this.usuario}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,9 @@ class Inicio extends StatelessWidget {
                                     color: Colors.black.withOpacity(0.7),
                                   ),
                                 ),
-                                const Text(
-                                  "Juan David",
-                                  style: TextStyle(
+                                Text(
+                                  usuario.nombre,
+                                  style: const TextStyle(
                                     fontSize: 35,
                                     color: Colors.purple,
                                   ),

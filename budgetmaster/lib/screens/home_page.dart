@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:budgetmaster/inicio.dart';
-import 'package:budgetmaster/configuracion.dart';
+import 'package:budgetmaster/screens/inicio.dart';
+import 'package:budgetmaster/screens/configuracion.dart';
+import 'package:budgetmaster/models/usuario.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final Usuario usuario;
+  const HomePage({Key? key, required this.usuario}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -13,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int index = 1;
   @override
-  Widget build(BuildContext context) {         
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple,
       bottomNavigationBar: CurvedNavigationBar(
@@ -38,26 +40,25 @@ class _HomePageState extends State<HomePage> {
           width: double.infinity,
           height: double.infinity,
           alignment: Alignment.center,
-          child: getSelectedWidget(index: index)
+          child: getSelectedWidget(index: index, usuario: widget.usuario)
       ),
     );
   }
 
-  Widget getSelectedWidget({required int index}) {
+  Widget getSelectedWidget({required int index, required Usuario usuario}) {
     Widget widget;
     switch (index) {
       case 0:
-        widget = const Inicio();
+        widget = Inicio(usuario: usuario);
         break;
       case 1:
-        widget = const Inicio();
+        widget = Inicio(usuario: usuario);
         break;
       case 2:
         widget = const Configuracion();
         break;
-
       default:
-        widget = const Inicio();
+        widget = Inicio(usuario: usuario);
         break;
     }
     return widget;
