@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:budgetmaster/screens/login_screen.dart';
+import 'package:budgetmaster/db/supabaseConnection.dart';
 
-
-void main() {
+void main() async {
+  await SupabaseService().initialize();
   runApp(const Login());
 }
 

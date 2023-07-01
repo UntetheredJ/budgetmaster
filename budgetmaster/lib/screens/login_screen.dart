@@ -10,8 +10,8 @@ class LoginScreen extends StatelessWidget {
   var contrasennaController = TextEditingController();
 
   // Iniciar instancia de base de datos
-  var supabase = Connection();
-  final cliente = Supabase.instance.client;
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient get cliente => _supabaseService.client;
 
   LoginScreen({Key? key}) : super(key: key);
 

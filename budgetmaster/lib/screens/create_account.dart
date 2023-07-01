@@ -21,8 +21,8 @@ class _CreateAccountState extends State<CreateAccount> {
   var contrasennaController2 = TextEditingController();
 
   // Iniciar instancia de base de datos
-  var supabase = Connection();
-  final cliente = Supabase.instance.client;
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient get cliente => _supabaseService.client;
 
   @override
   Widget build(BuildContext context) {
