@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:budgetmaster/models/usuario.dart';
+import 'package:budgetmaster/db/supabaseConnection.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Configuracion extends StatelessWidget {
-  const Configuracion({Key? key}) : super(key: key);
+  var newUsuarioController = TextEditingController();
+  final Usuario usuario;
+  Configuracion({Key? key ,required this.usuario}) : super(key: key);
+
+  // Iniciar instancia de base de datos
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient get cliente => _supabaseService.client;
 
 @override
 Widget build(BuildContext context) {
@@ -19,6 +27,7 @@ Widget build(BuildContext context) {
 
     ),
     body:  SafeArea(
+     child: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(2.0),
 
@@ -44,10 +53,27 @@ Widget build(BuildContext context) {
                           content: SingleChildScrollView(
                             child: ListBody(
                               children: [
-                                const Text("Actualizar correo:", style: TextStyle(fontSize: 18, color: Colors.blue, fontWeight: FontWeight.bold),),
+                                 Text(
+                                  usuario.usuario,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.purple,
+                                  ),
+                                ),
+                                const SizedBox(height: 20,),
+                             ExpansionTile(
+                               leading:  const CircleAvatar(
+                                 backgroundColor: Colors.deepPurpleAccent,
+                                 child: Icon(Icons.edit, size: 20,),
+                               ),
+                               title:  const Text("Actualizar correo:", style: TextStyle(fontSize: 15, color: Colors.blue, fontWeight: FontWeight.bold),),
+                               // Contents
+                               children: [
+                                const SizedBox(height: 10,),
                                 const Text("Ingrese correo electrónico:", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),),
                                 const SizedBox(height: 10,),
                                 TextFormField(
+                                  controller: newUsuarioController,
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: const InputDecoration(
                                     labelText: "Correo electrónico",
@@ -58,7 +84,7 @@ Widget build(BuildContext context) {
 
                                 const SizedBox(height: 10,),
                                 Container(
-                                  height: 50,
+                                  height: 45,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
@@ -68,21 +94,71 @@ Widget build(BuildContext context) {
                                         end: Alignment.bottomLeft),
                                   ),
                                   child: MaterialButton(
-                                    onPressed: () {
-                                    },
+                                    onPressed: () async {
+                                      String newUsuario = newUsuarioController.text;
+                                      int valor = await actualizarUsuario(newUsuario);
+
+                                      if (valor == 1) {
+                                        // ignore: use_build_context_synchronously
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("Correcto"),
+                                              content: Text("Se ha actualizado su correo electrónico. Vuelva a iniciar sesión para visualizar los cambios"),
+                                              actions: <Widget>[
+
+                                                TextButton(
+                                                  child: Text("Ok"),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }  else {
+                                        // ignore: use_build_context_synchronously
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return const AlertDialog(
+                                                title: Text("Error"),
+                                                content: SingleChildScrollView(
+                                                  child: ListBody(
+                                                    children: [
+                                                      Text("No se pudo actualizar el correo")
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                        );
+                                      }
+                      },
                                     child: const Text(
                                       "Guardar cambios",
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
+
                                       ),
+
                                     ),
+
                                   ),
+
                                 ),
+                                 const SizedBox(height: 10,),
+                               ],
+                            ),
+
                               ],
                             ),
                           ),
                         );
+
                       });},
                     ),
 
@@ -198,12 +274,28 @@ Widget build(BuildContext context) {
 
         ),
 
-
+      ),
       ),
 
     ),
 
 
   );
+}
+
+
+Future<int> actualizarUsuario(String newusuario) async {
+  try {
+    await cliente
+        .from('usuario')
+        .update({ 'usuario': newusuario})
+        .match({ 'usuario': usuario.usuario }
+    );
+    debugPrint("Correcto, correo actualizado");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
 }
 }

@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         widget = Inicio(usuario: usuario);
         break;
       case 2:
-        widget = const Configuracion();
+        widget = Configuracion(usuario: usuario);
         break;
       default:
         widget = Inicio(usuario: usuario);
