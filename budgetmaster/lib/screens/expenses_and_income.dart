@@ -25,7 +25,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
   SupabaseClient get cliente => _supabaseService.client;
 
   // Formato
-  final currencyFormat = NumberFormat.simpleCurrency();
+  final currencyFormat = NumberFormat.simpleCurrency(locale: "es_US");
 
   // Pago Periodico
   var descripcionPagoPeriodico = TextEditingController();
