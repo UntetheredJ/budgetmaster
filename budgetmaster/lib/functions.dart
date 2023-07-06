@@ -16,3 +16,9 @@ String convertDate(DateTime fecha) {
   String fechaPostgres = "${fecha.year}/${fecha.month}/${fecha.day}";
   return fechaPostgres;
 }
+
+DateTime converDateTime(String fecha) {
+  List<String> partes = fecha.split('-');
+  DateTime fechaDateTime = DateTime(int.parse(partes[0]), int.parse(partes[1]), int.parse(partes[2]), 0, 0, 0);
+  return fechaDateTime;
+}
