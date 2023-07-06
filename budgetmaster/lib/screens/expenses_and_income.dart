@@ -204,15 +204,9 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                                 valor_pago_periodico,
                                                                                 fecha_pago_periodico,
                                                                                 fecha_vencimiento);
-<<<<<<< Updated upstream
-                                                                            if (valor == 1) {
-=======
-
                                                                             await initNotifications();
                                                                             mostrarNotification(valor_pago_periodico ,'Recordatorio Pago', valorPagoPeriodico.text );
-                                                                            if (valor ==
-                                                                                1) {
->>>>>>> Stashed changes
+                                                                            if (valor ==1) {
                                                                               // ignore: use_build_context_synchronously
                                                                               showDialog(
                                                                                 context: context,
@@ -826,18 +820,95 @@ class _Expenses_and_income extends State<expenses_and_income> {
                               ],
                             ),
                             SingleChildScrollView(
-                              child: FutureBuilder<List<GastoEspontaneo>>(
-                                  future: listaGastoEspontaneo(),
+                              child: FutureBuilder<List<Ingreso>>(
+                                  future: listaIngresos(),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
                                       return CircularProgressIndicator();
                                     } else if (snapshot.hasError) {
                                       return Text('Error al cargar los datos');
                                     } else {
-                                      List<GastoEspontaneo> gastos = snapshot.data!;
-                                      return Text("HOla");
+                                      List<Ingreso> ingresos = snapshot.data!;
+                                      return DataTable(
+                                        dividerThickness: 0,
+                                        dataRowHeight: 70,
+                                        headingRowHeight: 0,
+                                        columnSpacing: 15,
+                                        columns: const [
+                                          DataColumn(label: Text("")),
+                                          DataColumn(label: Text("")),
+                                          DataColumn(label: Text("")),
+                                        ],
+                                        rows: ingresos.map((ingreso) {
+                                          return DataRow(cells: [
+                                            DataCell(
+                                              Container(
+                                                width: 5,
+                                                height: 60,
+                                                color: Colors.purple,
+                                                child: Text(""),
+                                              ),
+                                            ),
+                                            DataCell(Column(
+                                              children: [
+                                                Text(
+                                                  ingreso.descripcion,
+                                                  style: const TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  ingreso.valor.toString(),
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      color: Color(0xFF7B1FA2)),
+                                                ),
+                                              ],
+                                            )),
+                                            DataCell(Row(
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.all(10.0),
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(100),
+                                                    color: Colors.amber,
+                                                  ),
+                                                  child: IconButton(
+                                                    onPressed: () {},
+                                                    icon: const Icon(
+                                                      Icons.edit,
+                                                      color: Colors.white,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.all(10.0),
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(100),
+                                                    color: Colors.red,
+                                                  ),
+                                                  child: IconButton(
+                                                    onPressed: () {},
+                                                    icon: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.white,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                          ]);
+                                        }).toList(),
+                                      );
                                     };
-                                  }),
+                                  }
+                              ),
                             ),
                             Row(
                               children: [
@@ -988,7 +1059,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
     List<Ingreso> listaIngresos = [];
     try {
       final data = await cliente
-          .from('ingresos')
+          .from('ingreso')
           .select('id_ingreso, descripcion, valor, fecha, id_usuario')
           .eq('id_usuario', widget.usuario.id_usario);
       if (data.isNotEmpty) {

@@ -10,7 +10,6 @@ class Configuracion extends StatelessWidget {
   var newcontrasenna2Controller = TextEditingController();
   var contrasennaController = TextEditingController();
   final Usuario usuario;
-  final Pago pago
   Configuracion({Key? key ,required this.usuario}) : super(key: key);
 
   // Iniciar instancia de base de datos
