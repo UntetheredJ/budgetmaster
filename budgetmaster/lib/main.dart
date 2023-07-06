@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:budgetmaster/screens/login_screen.dart';
 import 'package:budgetmaster/db/supabaseConnection.dart';
+import 'package:budgetmaster/screens/service.dart';
 
 void main() async {
   await SupabaseService().initialize();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const Login());
+
 }
 
 class Login extends StatelessWidget {

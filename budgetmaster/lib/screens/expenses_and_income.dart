@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:budgetmaster/db/supabaseConnection.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:budgetmaster/functions.dart';
+import 'package:budgetmaster/screens/service.dart';
 
 class expenses_and_income extends StatefulWidget {
   final Usuario usuario;
@@ -203,7 +204,15 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                                 valor_pago_periodico,
                                                                                 fecha_pago_periodico,
                                                                                 fecha_vencimiento);
+<<<<<<< Updated upstream
                                                                             if (valor == 1) {
+=======
+
+                                                                            await initNotifications();
+                                                                            mostrarNotification(valor_pago_periodico ,'Recordatorio Pago', valorPagoPeriodico.text );
+                                                                            if (valor ==
+                                                                                1) {
+>>>>>>> Stashed changes
                                                                               // ignore: use_build_context_synchronously
                                                                               showDialog(
                                                                                 context: context,

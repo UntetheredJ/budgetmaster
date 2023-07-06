@@ -2,6 +2,7 @@ import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:budgetmaster/widgets/inicio_widget.dart';
+import 'package:budgetmaster/screens/service.dart';
 
 class Inicio extends StatelessWidget {
   final Usuario usuario;
@@ -169,4 +170,7 @@ class Inicio extends StatelessWidget {
       ),
     );
   }
+
 }
+
+

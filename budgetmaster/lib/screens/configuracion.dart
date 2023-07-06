@@ -10,6 +10,7 @@ class Configuracion extends StatelessWidget {
   var newcontrasenna2Controller = TextEditingController();
   var contrasennaController = TextEditingController();
   final Usuario usuario;
+  final Pago pago
   Configuracion({Key? key ,required this.usuario}) : super(key: key);
 
   // Iniciar instancia de base de datos
@@ -59,6 +60,7 @@ Widget build(BuildContext context) {
                           children: [
                             Text(
                               usuario.nombre,
+
                               style: const TextStyle(
                                 fontSize: 18,
                                 color: Colors.purple,
