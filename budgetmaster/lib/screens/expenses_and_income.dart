@@ -47,13 +47,14 @@ class expenses_and_income extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(100),
                                   color: const Color(0xFF7B1FA2),
                                 ),
-                                child: MaterialButton(
+                                child: TextButton(
                                   onPressed: () { },
                                   child: const Text('+',
                                     style:  TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
                                     ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
@@ -108,13 +109,12 @@ class expenses_and_income extends StatelessWidget {
                                                 borderRadius: BorderRadius.circular(100),
                                                 color: Colors.amber,
                                               ),
-                                              child: MaterialButton(
+                                              child: IconButton(
                                                 onPressed: () { },
-                                                child: const Icon(
+                                                icon: const Icon(
                                                   Icons.edit,
                                                   color: Colors.white,
-                                                  size: 20,
-                                                ),
+                                                  size: 20),
                                               ),
                                             ),
                                             Container(
@@ -125,9 +125,9 @@ class expenses_and_income extends StatelessWidget {
                                                 borderRadius: BorderRadius.circular(100),
                                                 color: Colors.red,
                                               ),
-                                              child: MaterialButton(
+                                              child: IconButton(
                                                 onPressed: () { },
-                                                child: const Icon(
+                                                icon: const Icon(
                                                   Icons.delete,
                                                   color: Colors.white,
                                                   size: 20,
@@ -178,9 +178,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.amber,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.edit,
                                                     color: Colors.white,
                                                     size: 20,
@@ -195,9 +195,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.red,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.delete,
                                                     color: Colors.white,
                                                     size: 20,
@@ -248,9 +248,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.amber,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.edit,
                                                     color: Colors.white,
                                                     size: 20,
@@ -265,9 +265,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.red,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.delete,
                                                     color: Colors.white,
                                                     size: 20,
@@ -285,7 +285,7 @@ class expenses_and_income extends StatelessWidget {
                             children: [
                               Container(
                                 margin: const EdgeInsets.all(10.0),
-                                child: Text("Total:", style: TextStyle(fontSize: 20),),
+                                child: const Text("Total:", style: TextStyle(fontSize: 20),),
                               ),
                               Container(
                                 margin: const EdgeInsets.all(10.0),
@@ -303,7 +303,7 @@ class expenses_and_income extends StatelessWidget {
                             children: [
                               Container(
                                 margin: const EdgeInsets.all(10.0),
-                                child: Text("Ingresos", style: TextStyle(fontSize: 25, color: Colors.black)),
+                                child: const Text("Ingresos", style: TextStyle(fontSize: 25, color: Colors.black)),
                               ),
                               Container(
                                 margin: const EdgeInsets.all(10.0),
@@ -313,9 +313,9 @@ class expenses_and_income extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(100),
                                   color: const Color(0xFF7B1FA2),
                                 ),
-                                child: MaterialButton(
+                                child: IconButton(
                                   onPressed: () { },
-                                  child: const Text('+',
+                                  icon: const Text('+',
                                     style:  TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -369,9 +369,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.amber,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.edit,
                                                     color: Colors.white,
                                                     size: 20,
@@ -386,9 +386,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.red,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.delete,
                                                     color: Colors.white,
                                                     size: 20,
@@ -434,9 +434,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.amber,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.edit,
                                                     color: Colors.white,
                                                     size: 20,
@@ -451,9 +451,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.red,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.delete,
                                                     color: Colors.white,
                                                     size: 20,
@@ -499,9 +499,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.amber,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.edit,
                                                     color: Colors.white,
                                                     size: 20,
@@ -516,9 +516,9 @@ class expenses_and_income extends StatelessWidget {
                                                   borderRadius: BorderRadius.circular(100),
                                                   color: Colors.red,
                                                 ),
-                                                child: MaterialButton(
+                                                child: IconButton(
                                                   onPressed: () { },
-                                                  child: const Icon(
+                                                  icon: const Icon(
                                                     Icons.delete,
                                                     color: Colors.white,
                                                     size: 20,
