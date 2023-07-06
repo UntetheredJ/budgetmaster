@@ -3,6 +3,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:budgetmaster/screens/inicio.dart';
 import 'package:budgetmaster/screens/configuracion.dart';
 import 'package:budgetmaster/models/usuario.dart';
+import 'package:budgetmaster/screens/expenses_and_income.dart';
 
 class HomePage extends StatefulWidget {
   final Usuario usuario;
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     Widget widget;
     switch (index) {
       case 0:
-        widget = Inicio(usuario: usuario);
+        widget = expenses_and_income(usuario: usuario,);
         break;
       case 1:
         widget = Inicio(usuario: usuario);
