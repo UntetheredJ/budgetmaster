@@ -16,9 +16,6 @@ class Configuracion extends StatelessWidget {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient get cliente => _supabaseService.client;
 
-
-
-
 @override
 Widget build(BuildContext context) {
   return Scaffold(

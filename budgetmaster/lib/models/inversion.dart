@@ -1,23 +1,34 @@
-class Inversion{
-  String id_inversion;
-  String descripcion;
-  int valor;
+import 'package:budgetmaster/models/gasto.dart';
+
+class Inversion extends Gasto{
   DateTime fecha;
   String id_usuario;
   String id_familia;
 
-  Inversion(
-      this.id_inversion,
-      this.descripcion,
-      this.valor,
-      this.fecha,
-      this.id_usuario,
-      this.id_familia,
-    );
+  Inversion({
+    required String id_inversion,
+    required String descripcion,
+    required int valor,
+    required this.fecha,
+    required this.id_usuario,
+    required this.id_familia
+  }) : super(id_inversion, descripcion, valor);
 
-  Inversion.usuario(this.id_inversion, this.descripcion, this.valor, this.fecha, this.id_usuario):
-        id_familia = 'null';
+  Inversion.usuario({
+    required String id_inversion,
+    required String descripcion,
+    required int valor,
+    required this.fecha,
+    required this.id_usuario,
+    this.id_familia = 'null'
+  }) : super(id_inversion, descripcion, valor);
 
-  Inversion.familia(this.id_inversion, this.descripcion, this.valor, this.fecha, this.id_familia):
-      id_usuario = 'null';
+  Inversion.familia({
+    required String id_inversion,
+    required String descripcion,
+    required int valor,
+    required this.fecha,
+    required this.id_familia,
+    this.id_usuario = 'null'
+  }) : super(id_inversion, descripcion, valor);
 }
