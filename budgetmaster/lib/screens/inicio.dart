@@ -61,27 +61,26 @@ class Inicio extends StatelessWidget {
                   ),
                   const SizedBox(height: 50),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Text(
-                      "Estos son tus ",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black.withOpacity(0.7),
-                      ),
-                    ),
-                    const Text(
-                      "gastos",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.purple,
-                      ),
-                    ),
-                    Text(
-                      " mensuales:",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black.withOpacity(0.7),
-                      ),
-                    ),
+                    Flexible(
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 18,
+                             color: Colors.black.withOpacity(0.7)
+                          ),
+                          children: const <TextSpan>[
+                            TextSpan(text: "Estos son tus "),
+                            TextSpan(
+                              text: "gastos",
+                              style: TextStyle(
+                                color: Colors.purple
+                              )
+                            ),
+                            TextSpan(text: " mensuales:")
+                          ]
+                        )
+                      )
+                    )
                   ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -94,27 +93,26 @@ class Inicio extends StatelessWidget {
                     ],
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Text(
-                      "Estos son tus ",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black.withOpacity(0.7),
-                      ),
-                    ),
-                    const Text(
-                      "ingresos",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.purple,
-                      ),
-                    ),
-                    Text(
-                      " mensuales:",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black.withOpacity(0.7),
-                      ),
-                    ),
+                    Flexible(
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 18,
+                             color: Colors.black.withOpacity(0.7)
+                          ),
+                          children: const <TextSpan>[
+                            TextSpan(text: "Estos son tus "),
+                            TextSpan(
+                              text: "ingresos",
+                              style: TextStyle(
+                                color: Colors.purple
+                              )
+                            ),
+                            TextSpan(text: " mensuales:")
+                          ]
+                        )
+                      )
+                    )
                   ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -128,27 +126,26 @@ class Inicio extends StatelessWidget {
                   ),
                   const SizedBox(height: 50),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    Text(
-                      "Tu ",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black.withOpacity(0.7),
-                      ),
-                    ),
-                    const Text(
-                      "saldo disponible ",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.purple,
-                      ),
-                    ),
-                    Text(
-                      "es:",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black.withOpacity(0.7),
-                      ),
-                    ),
+                    Flexible(
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 18,
+                             color: Colors.black.withOpacity(0.7)
+                          ),
+                          children: const <TextSpan>[
+                            TextSpan(text: "Tu "),
+                            TextSpan(
+                              text: "saldo disponible",
+                              style: TextStyle(
+                                color: Colors.purple
+                              )
+                            ),
+                            TextSpan(text: " es:")
+                          ]
+                        )
+                      )
+                    )
                   ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
