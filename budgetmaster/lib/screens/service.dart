@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -17,7 +18,7 @@ Future<void> initNotifications() async {
 }
 
 Future<void> mostrarNotification(int id, String title, String body) async {
-  var dateTime = DateTime(DateTime.now().year, DateTime.now().month,DateTime.now().day, 17, 14, 0);
+  var dateTime = DateTime(DateTime.now().year, DateTime.now().month,DateTime.now().day, 21, 43, 0);
   tz.initializeTimeZones();
   await flutterLocalNotificationsPlugin.zonedSchedule(
     id,
@@ -27,10 +28,11 @@ Future<void> mostrarNotification(int id, String title, String body) async {
     NotificationDetails(
       android: AndroidNotificationDetails(
           id.toString(),
-          'Go To Bed',
+          'Recordatorio Pagos',
           importance: Importance.max,
           priority: Priority.max,
-          icon: '@mipmap/ic_launcher'
+          icon: '@mipmap/ic_launcher',
+          color: Colors.purple
       ),
     ),
     uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,

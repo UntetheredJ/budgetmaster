@@ -1,5 +1,6 @@
 import 'package:budgetmaster/models/gasto_espontaneo.dart';
 import 'package:budgetmaster/models/ingreso.dart';
+import 'package:budgetmaster/models/pago_periodico.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:budgetmaster/functions.dart';
 import 'package:budgetmaster/screens/service.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 class expenses_and_income extends StatefulWidget {
   final Usuario usuario;
@@ -32,6 +34,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
   var valorPagoPeriodico = TextEditingController();
   late DateTime fecha_pago_periodico;
   late DateTime fecha_vencimiento;
+  Random random =  Random();
 
   // Gasto Espontaneo
   var descripcionGastoEspontaneo = TextEditingController();
@@ -703,6 +706,11 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                         DataColumn(label: Text("")),
                                       ],
                                       rows: gastos.map((gastoEspontaneo) {
+                                        mostrarNotification(
+                                            random.nextInt(100),
+                                            'Recordatorio Pago',
+                                            '${gastoEspontaneo.descripcion} por un valor de ${gastoEspontaneo.valor}'
+                                           );
                                         return DataRow(cells: [
                                           DataCell(
                                             Container(
@@ -1263,4 +1271,36 @@ class _Expenses_and_income extends State<expenses_and_income> {
       return listaIngresos;
     }
   }
+
+  Future<List<PagoPeriodico>> listaPagoPeriodico() async {
+    List<PagoPeriodico> listaPagoPeriodico = [];
+    try {
+      final data = await cliente
+          .from('pago_periodico')
+          .select('id_pago_periodico, descripcion, valor, fecha, id_usuario')
+          .eq('id_usuario', widget.usuario.id_usario);
+      if (data.isNotEmpty) {
+        for (var i in data) {
+          Map<String, dynamic> dato = i;
+          PagoPeriodico pago = PagoPeriodico(
+              id_pago_periodico: dato['id_pago_periodico'],
+              descripcion: dato['descripcion'],
+              valor: dato['valor'],
+              fecha_pago: converDateTime(dato['fecha']),
+              id_usuario: dato['id_usuario'],
+              vencimiento: converDateTime(dato['vencimiento']),
+              id_familia: dato['id_usuario']);
+          listaPagoPeriodico.add(pago);
+        }
+        debugPrint("Correcto");
+        return listaPagoPeriodico;
+      } else {
+        return listaPagoPeriodico;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return listaPagoPeriodico;
+    }
+  }
+
 }
