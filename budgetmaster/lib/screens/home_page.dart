@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     Widget widget;
     switch (index) {
       case 0:
-        widget = expenses_and_income(usuario: usuario,);
+        widget = expenses_and_income(usuario: usuario);
         break;
       case 1:
         widget = Inicio(usuario: usuario);

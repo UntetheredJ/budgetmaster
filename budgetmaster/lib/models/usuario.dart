@@ -1,5 +1,5 @@
 class Usuario{
-  String id_usario;
+  String id_usuario;
   String nombre;
   String usuario;
   String contrasenna;
@@ -7,7 +7,7 @@ class Usuario{
   int total_ahorrado;
 
   Usuario(
-      this.id_usario,
+      this.id_usuario,
       this.nombre,
       this.usuario,
       this.contrasenna,
@@ -16,5 +16,5 @@ class Usuario{
       );
 
   Usuario.sinDatos():
-      id_usario = 'null', nombre = 'null', usuario = 'null', contrasenna = 'null', saldo_total = 0, total_ahorrado = 0;
+      id_usuario = 'null', nombre = 'null', usuario = 'null', contrasenna = 'null', saldo_total = 0, total_ahorrado = 0;
 }

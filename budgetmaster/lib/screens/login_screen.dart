@@ -1,17 +1,13 @@
-import 'package:budgetmaster/db/supabaseConnection.dart';
 import 'package:budgetmaster/screens/home_page.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetmaster/screens/create_account.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:budgetmaster/db/functionQuerie.dart';
+
 
 class LoginScreen extends StatelessWidget {
   var correoController = TextEditingController();
   var contrasennaController = TextEditingController();
-
-  // Iniciar instancia de base de datos
-  final SupabaseService _supabaseService = SupabaseService();
-  SupabaseClient get cliente => _supabaseService.client;
 
   LoginScreen({Key? key}) : super(key: key);
 
@@ -164,34 +160,5 @@ class LoginScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<Usuario> login(String correo, String contrasenna) async {
-    Usuario usuario = Usuario.sinDatos();
-    try {
-      final data = await cliente
-          .from('usuario')
-          .select()
-          .eq('usuario', correo)
-          .eq('contrasenna', contrasenna);
-      if (data.isNotEmpty) {
-        Map<String, dynamic> dato = data[0];
-        usuario = Usuario(
-            dato['id_usuario'],
-            dato['nombre'],
-            dato['usuario'],
-            dato['contrasenna'],
-            dato['saldo_total'],
-            dato['total_ahorrado']
-        );
-        debugPrint("Correcto");
-        return usuario;
-      } else {
-        return usuario;
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-      return usuario;
-    }
   }
 }

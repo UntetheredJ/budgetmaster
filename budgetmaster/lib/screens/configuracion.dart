@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:budgetmaster/screens/login_screen.dart';
 import 'package:budgetmaster/models/usuario.dart';
-import 'package:budgetmaster/db/supabaseConnection.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:budgetmaster/db/functionQuerie.dart';
 
 class Configuracion extends StatelessWidget {
   var newUsuarioController = TextEditingController();
@@ -11,10 +9,6 @@ class Configuracion extends StatelessWidget {
   var contrasennaController = TextEditingController();
   final Usuario usuario;
   Configuracion({Key? key ,required this.usuario}) : super(key: key);
-
-  // Iniciar instancia de base de datos
-  final SupabaseService _supabaseService = SupabaseService();
-  SupabaseClient get cliente => _supabaseService.client;
 
 @override
 Widget build(BuildContext context) {
@@ -129,7 +123,7 @@ Widget build(BuildContext context) {
                                   child: MaterialButton(
                                     onPressed: () async {
                                       String newUsuario = newUsuarioController.text;
-                                      int valor = await actualizarUsuario(newUsuario);
+                                      int valor = await actualizarUsuario(newUsuario, usuario.usuario);
 
                                       if (valor == 1) {
                                         // ignore: use_build_context_synchronously
@@ -270,7 +264,7 @@ Widget build(BuildContext context) {
                                       String contrasenna1 = newcontrasenna1Controller.text;
                                       String contrasenna2 = newcontrasenna2Controller.text;
                                       if (contrasenna == usuario.contrasenna && contrasenna1 == contrasenna2) {
-                                        int valor = await actualizarContrasenna(contrasenna1);
+                                        int valor = await actualizarContrasenna(contrasenna1, usuario.usuario);
 
                                       if (valor == 1) {
                                         // ignore: use_build_context_synchronously
@@ -427,51 +421,13 @@ Widget build(BuildContext context) {
                 ),
               ),
             ),
-
           ],
-
-
         ),
-
       ),
       ),
-
     ),
-
-
   );
 }
-
-
-Future<int> actualizarUsuario(String newusuario) async {
-  try {
-    await cliente
-        .from('usuario')
-        .update({ 'usuario': newusuario})
-        .match({ 'usuario': usuario.usuario }
-    );
-    debugPrint("Correcto, correo actualizado");
-    return 1;
-  } catch (e) {
-    debugPrint(e.toString());
-    return 0;
-  }
-}
-
-  Future<int> actualizarContrasenna(String newcontrasenna) async {
-    try {
-      await cliente
-          .from('usuario')
-          .update({ 'contrasenna': newcontrasenna})
-          .match({ 'usuario': usuario.usuario }
-      );
-      debugPrint("Correcto, cambio de contraseña realizado");
-      return 1;
-    } catch (e) {
-      debugPrint(e.toString());
-      return 0;
-    }
-  }
 }
 
 
