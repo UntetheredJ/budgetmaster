@@ -72,21 +72,16 @@ class _CreateAccountState extends State<CreateAccount> {
                     controller: usuarioController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      labelText: "Usuario",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.account_box),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
                       labelText: "Correo electrónico",
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.email),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 25,
@@ -101,6 +96,12 @@ class _CreateAccountState extends State<CreateAccount> {
                       prefixIcon: Icon(Icons.lock),
                       suffixIcon: Icon(Icons.remove_red_eye),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 25,
@@ -115,6 +116,12 @@ class _CreateAccountState extends State<CreateAccount> {
                       prefixIcon: Icon(Icons.lock),
                       suffixIcon: Icon(Icons.remove_red_eye),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 25,
