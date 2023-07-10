@@ -5,12 +5,21 @@ import 'package:budgetmaster/screens/create_account.dart';
 import 'package:budgetmaster/db/functionQuerie.dart';
 
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  LoginScreenState createState() {
+    return LoginScreenState();
+  }
+}
+
+class LoginScreenState extends State<LoginScreen> {
   var correoController = TextEditingController();
   var contrasennaController = TextEditingController();
 
-  LoginScreen({Key? key}) : super(key: key);
 
+  bool isObscure = true;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -51,12 +60,20 @@ class LoginScreen extends StatelessWidget {
               TextFormField(
                 controller: contrasennaController,
                 keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: isObscure,
+                decoration: InputDecoration(
                   labelText: "Contraseña",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
-                  suffixIcon: Icon(Icons.remove_red_eye),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                      icon: Icon(
+                          isObscure ? Icons.visibility_off : Icons.visibility
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isObscure = !isObscure;
+                        });
+                      })
                 ),
               ),
               const SizedBox(
