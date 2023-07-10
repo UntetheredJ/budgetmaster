@@ -93,18 +93,16 @@ Future<int> actualizarContrasenna(String newcontrasenna, String usuario) async {
   }
 }
 
-Future<int> agregarPagoPeriodicoUsuario(String id_usuario, String descripcion, int valor, DateTime fecha, DateTime vencimineto) async {
+Future<int> agregarPagoPeriodicoUsuario(String id_usuario, String descripcion, int valor, DateTime vencimineto) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   String id = randomDigits(10);
-  String fechaPostgres = convertDate(fecha);
   String fechaVenciminetoPostgres = convertDate(vencimineto);
   try {
     await cliente.from('pago_periodico').insert({
       'id_pago_periodico': id,
       'descripcion': descripcion,
       'valor': valor,
-      'fecha_pago': fechaPostgres,
       'vencimiento': fechaVenciminetoPostgres,
       'id_usuario': id_usuario,
     });
@@ -115,6 +113,22 @@ Future<int> agregarPagoPeriodicoUsuario(String id_usuario, String descripcion, i
     return 0;
   }
 }
+
+Future<int> eliminarPagoPeriodicoUsuario(String id_pago_periodico) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('pago_periodico')
+        .delete()
+        .match({"id_pago_periodico": id_pago_periodico});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
 
 Future<int> agregarGastoEspontaneoUsuario(String id_usuario,String descripcion, int valor, DateTime fecha) async {
   final SupabaseService _supabaseService = SupabaseService();
@@ -129,6 +143,21 @@ Future<int> agregarGastoEspontaneoUsuario(String id_usuario,String descripcion, 
       'fecha': fechaPostgres,
       'id_usuario': id_usuario,
     });
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> eliminarGastoEspontaneoUsuario(String id_gasto_espontaneo) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('gasto_espontaneo')
+        .delete()
+        .match({"id_gasto_espontaneo": id_gasto_espontaneo});
     debugPrint("Correcto");
     return 1;
   } catch (e) {
@@ -158,6 +187,21 @@ Future<int> agregarInversionUsuario(String id_usuario, String descripcion, int v
   }
 }
 
+Future<int> eliminarInversion(String id_inversion) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('inversion')
+        .delete()
+        .match({"id_inversion": id_inversion});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
 Future<int> agregarIngreso(String id_usuario, String descripcion, int valor, DateTime fecha) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
@@ -171,6 +215,21 @@ Future<int> agregarIngreso(String id_usuario, String descripcion, int valor, Dat
       'fecha': fechaPostgres,
       'id_usuario': id_usuario,
     });
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> eliminarIngreso(String id_ingreso) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('ingreso')
+        .delete()
+        .match({"id_ingreso": id_ingreso});
     debugPrint("Correcto");
     return 1;
   } catch (e) {
@@ -241,22 +300,23 @@ Future<List<PagoPeriodico>> listaPagoPeriodico(String id_usuario) async {
   try {
     final data = await cliente
         .from('pago_periodico')
-        .select('id_pago_periodico, descripcion, valor, fecha, id_usuario')
+        .select('id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
         .eq('id_usuario', id_usuario);
     if (data.isNotEmpty) {
       for (var i in data) {
         Map<String, dynamic> dato = i;
-        PagoPeriodico pago = PagoPeriodico(
+        DateTime fecha_pago;
+        if (dato['fecha_pago']==null) {fecha_pago=DateTime(0,0,0,0,0,0,0,0);} else {fecha_pago=converDateTime(dato['fecha_pago']);}
+        PagoPeriodico pago = PagoPeriodico.usuario(
             id_pago_periodico: dato['id_pago_periodico'],
             descripcion: dato['descripcion'],
             valor: dato['valor'],
-            fecha_pago: converDateTime(dato['fecha']),
-            id_usuario: dato['id_usuario'],
+            fecha_pago: fecha_pago,
             vencimiento: converDateTime(dato['vencimiento']),
-            id_familia: dato['id_usuario']);
+            id_usuario: dato['id_usuario']
+        );
         listaPagoPeriodico.add(pago);
       }
-      debugPrint("Correcto");
       return listaPagoPeriodico;
     } else {
       return listaPagoPeriodico;
@@ -264,5 +324,36 @@ Future<List<PagoPeriodico>> listaPagoPeriodico(String id_usuario) async {
   } catch (e) {
     debugPrint(e.toString());
     return listaPagoPeriodico;
+  }
+}
+
+Future<List<Inversion>> listaInversion(String id_usuario) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  List<Inversion> listaInversiones = [];
+  try {
+    final data = await cliente
+        .from('inversion')
+        .select('id_inversion, descripcion, valor, fecha, id_usuario')
+        .eq('id_usuario', id_usuario);
+    if (data.isNotEmpty) {
+      for (var i in data) {
+        Map<String, dynamic> dato = i;
+        Inversion inversion = Inversion.usuario(
+            id_inversion: dato['id_inversion'],
+            descripcion: dato['descripcion'],
+            valor: dato['valor'],
+            fecha: converDateTime(dato['fecha']),
+            id_usuario: dato['id_usuario'],
+        );
+        listaInversiones.add(inversion);
+      }
+      return listaInversiones;
+    } else {
+      return listaInversiones;
+    }
+  } catch (e) {
+    debugPrint(e.toString());
+    return listaInversiones;
   }
 }
