@@ -21,7 +21,8 @@ Future<Usuario> login(String correo, String contrasenna) async {
     if (data.isNotEmpty) {
       Map<String, dynamic> dato = data[0];
       usuario = Usuario(dato['id_usuario'], dato['nombre'], dato['usuario'],
-          dato['contrasenna'], dato['saldo_total'], dato['total_ahorrado']);
+          dato['contrasenna'], dato['saldo_total'], dato['total_ahorrado'],
+          dato['total_gastos'], dato['total_ingresos']);
       debugPrint("Correcto");
       return usuario;
     } else {
@@ -45,7 +46,8 @@ Future<int> registroUsuario(
       'usuario': usuario,
       'contrasenna': contrasenna,
       'saldo_total': 0,
-      'total_ahorrado': 0
+      'total_ahorrado': 0,
+      'total_gastos': 0
     });
     debugPrint(id);
     debugPrint("Correcto");
@@ -397,5 +399,50 @@ Future<List<Inversion>> listaInversion(String id_usuario) async {
   } catch (e) {
     debugPrint(e.toString());
     return listaInversiones;
+  }
+}
+
+Future<int> actualizarGastos(String id_usuario, int total_gastos) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('usuario')
+        .update({"total_gastos": total_gastos})
+        .match({"id_usuario": id_usuario});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> actualizarIngresos(String id_usuario, int total_ingresos) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('usuario')
+        .update({"total_ingresos": total_ingresos})
+        .match({"id_usuario": id_usuario});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> actualizarSaldoTotal(String id_usuario, int saldo_total) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('usuario')
+        .update({"saldo_total": saldo_total})
+        .match({"id_usuario": id_usuario});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
   }
 }

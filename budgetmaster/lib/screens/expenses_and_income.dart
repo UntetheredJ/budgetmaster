@@ -21,6 +21,12 @@ class expenses_and_income extends StatefulWidget {
 }
 
 class _Expenses_and_income extends State<expenses_and_income> {
+  //Calculos
+  late List<GastoEspontaneo> listGastoEspontaneo;
+  late List<PagoPeriodico> listPagoPeriodico;
+  late List<Inversion> listInversion;
+  late List<Ingreso> listIngreso;
+
   bool _isLoading = false;
 
   // Formato
@@ -29,7 +35,6 @@ class _Expenses_and_income extends State<expenses_and_income> {
   // Pago Periodico
   var descripcionPagoPeriodico = TextEditingController();
   var valorPagoPeriodico = TextEditingController();
-  late DateTime fecha_pago_periodico;
   late DateTime fecha_vencimiento;
   Random random =  Random();
 
@@ -47,6 +52,20 @@ class _Expenses_and_income extends State<expenses_and_income> {
   var descripcionIngreso = TextEditingController();
   var valorIngreso = TextEditingController();
   late DateTime fecha_ingreso;
+
+  //Actualizar Pago Periodico
+  var actualizarDescripcionPagoPeriodico = TextEditingController();
+  var actualizarValorPagoPeriodico = TextEditingController();
+  late DateTime actualizar_fecha_vencimiento;
+
+  // Gasto Espontaneo
+  var ActualizarDescripcionGastoEspontaneo = TextEditingController();
+  var ActualizarValorGastoEspontaneoo = TextEditingController();
+  late DateTime actualizar_fecha_gasto_espontaneo;
+
+  // Inversion
+
+  // Ingreso
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +189,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                               return Text('Error al cargar los datos');
                                             } else {
                                               List<GastoEspontaneo> gastos = snapshot.data!;
+                                              listGastoEspontaneo = gastos;
                                               return DataTable(
                                                 dividerThickness: 0,
                                                 dataRowHeight: 70,
@@ -235,7 +255,9 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                   color: Colors.amber,
                                                                 ),
                                                                 child: IconButton(
-                                                                  onPressed: () {},
+                                                                  onPressed: () {
+                                                                    actualizarGastoEspontaneo();
+                                                                  },
                                                                   icon: const Icon(
                                                                       Icons.edit,
                                                                       color: Colors.white,
@@ -308,6 +330,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                               return Text('Error al cargar los datos');
                                             } else {
                                               List<PagoPeriodico> pagos = snapshot.data!;
+                                              listPagoPeriodico = pagos;
                                               return DataTable(
                                                 dividerThickness: 0,
                                                 dataRowHeight: 70,
@@ -373,7 +396,9 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                   color: Colors.amber,
                                                                 ),
                                                                 child: IconButton(
-                                                                  onPressed: () {},
+                                                                  onPressed: () {
+
+                                                                  },
                                                                   icon: const Icon(
                                                                       Icons.edit,
                                                                       color: Colors.white,
@@ -446,6 +471,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                               return Text('Error al cargar los datos');
                                             } else {
                                               List<Inversion> inversiones = snapshot.data!;
+                                              listInversion = inversiones;
                                               return DataTable(
                                                 dividerThickness: 0,
                                                 dataRowHeight: 70,
@@ -589,9 +615,9 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                   ),
                                   Container(
                                     margin: const EdgeInsets.all(10.0),
-                                    child: const Text(
-                                      "6.100.000",
-                                      style: TextStyle(
+                                    child: Text(
+                                      currencyFormat.format(widget.usuario.total_gastos),
+                                      style: const TextStyle(
                                           fontSize: 20, color: Color(0xFF7B1FA2)),
                                     ),
                                   ),
@@ -641,6 +667,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                           return Text('Error al cargar los datos');
                                         } else {
                                           List<Ingreso> ingresos = snapshot.data!;
+                                          listIngreso = ingresos;
                                           return DataTable(
                                             dividerThickness: 0,
                                             dataRowHeight: 70,
@@ -775,8 +802,8 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                   Container(
                                     margin: const EdgeInsets.all(10.0),
                                     child: Text(
-                                      "1.560.000",
-                                      style: TextStyle(
+                                      currencyFormat.format(widget.usuario.total_ingresos),
+                                      style: const TextStyle(
                                           fontSize: 20, color: Color(0xFF7B1FA2)),
                                     ),
                                   ),
@@ -847,10 +874,11 @@ class _Expenses_and_income extends State<expenses_and_income> {
     setState(() {
       _isLoading = true;
     });
-
+    await Future.delayed(Duration(seconds: 1));
     setState(() {
       _isLoading = false;
     });
+    calcularDatos(listGastoEspontaneo, listPagoPeriodico, listInversion, listIngreso);
   }
 
   mostrarRegistroPagoPeriodico() {
@@ -1276,6 +1304,224 @@ class _Expenses_and_income extends State<expenses_and_income> {
         );
       },
     );
+  }
+
+  actualizarGastoEspontaneo() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            "Actualizar datos de gasto esponteneo",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                ElevatedButton.icon(
+                  icon:  const Icon(Icons.person_outline_sharp, size: 18),
+                  label: const Text('Descripcion'),
+                  onPressed: () {showDialog(context: context, builder: (BuildContext context){
+                    return AlertDialog(
+                      title: const Text("Nombre:", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: [
+                            const Text(
+                              "Ingresar nueva descripcion",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.purple,
+                              ),
+                            ),
+                            const SizedBox(height: 20,),
+                            TextFormField(
+                              controller: ActualizarDescripcionGastoEspontaneo,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                labelText: "Descripcion",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 20,),
+                            Container(
+                              height: 45,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: Colors.purple),
+                              child: MaterialButton(
+                                onPressed: () async {
+                                  int valor = 1;
+                                  if (valor == 1) {
+                                    Navigator.of(context).pop();
+                                    mostrarDialogoAceptado();
+                                  } else {
+                                    Navigator.of(context).pop();
+                                    mostrarDialogoError();
+                                  }
+                                },
+                                child: const Text(
+                                  "Actializar descripcion",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });},
+                ),
+                ElevatedButton.icon(
+                  icon:  const Icon(Icons.person_outline_sharp, size: 18),
+                  label: const Text('Valor'),
+                  onPressed: () {showDialog(context: context, builder: (BuildContext context){
+                    return AlertDialog(
+                      title: const Text("Valor:", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: [
+                            const Text(
+                              "Ingresar el nueva valor",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.purple,
+                              ),
+                            ),
+                            const SizedBox(height: 20,),
+                            TextFormField(
+                              controller: actualizarDescripcionPagoPeriodico,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                labelText: "Valor",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 20,),
+                            Container(
+                              height: 45,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: Colors.purple),
+                              child: MaterialButton(
+                                onPressed: () async {
+                                  int valor = 1;
+                                  if (valor == 1) {
+                                    Navigator.of(context).pop();
+                                    mostrarDialogoAceptado();
+                                  } else {
+                                    Navigator.of(context).pop();
+                                    mostrarDialogoError();
+                                  }
+                                },
+                                child: const Text(
+                                  "Actualizar Valor",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });},
+                ),
+                ElevatedButton.icon(
+                  icon:  const Icon(Icons.person_outline_sharp, size: 18),
+                  label: const Text('Fecha'),
+                  onPressed: () {showDialog(context: context, builder: (BuildContext context){
+                    return AlertDialog(
+                      title: const Text("Fecha:", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: [
+                            const Text(
+                              "Ingresar nueva fecha",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.purple,
+                              ),
+                            ),
+                            const SizedBox(height: 20,),
+                            OutlinedButton(
+                              onPressed: () async {
+                                fecha_ingreso = (await seleccionarFecha())!;
+                              },
+                              child: const Text('Seleccionar Fecha'),
+                            ),
+                            const SizedBox(height: 20,),
+                            Container(
+                              height: 45,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  color: Colors.purple),
+                              child: MaterialButton(
+                                onPressed: () async {
+                                  int valor = 1;
+                                  if (valor == 1) {
+                                    Navigator.of(context).pop();
+                                    mostrarDialogoAceptado();
+                                  } else {
+                                    Navigator.of(context).pop();
+                                    mostrarDialogoError();
+                                  }
+                                },
+                                child: const Text(
+                                  "Actualizar fecha",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });},
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  calcularDatos(List<GastoEspontaneo> listGastoEspontaneo, List<PagoPeriodico> listPagoPeriodico, List<Inversion> listInversion, List<Ingreso> listIngreso,) {
+    int sumaGasto = listGastoEspontaneo.fold(0, (previousValue, element) {
+      return previousValue + element.valor;
+    });
+    sumaGasto = listPagoPeriodico.fold(sumaGasto, (previousValue, element) {
+      return previousValue + element.valor;
+    });
+    sumaGasto = listInversion.fold(sumaGasto, (previousValue, element) {
+      return previousValue + element.valor;
+    });
+    int sumaIngresos = listIngreso.fold(0, (previousValue, element) {
+      return previousValue + element.valor;
+    });
+    int saldoTotal = sumaIngresos-sumaGasto;
+    widget.usuario.total_gastos = sumaGasto;
+    widget.usuario.total_ingresos = sumaIngresos;
+    widget.usuario.saldo_total =saldoTotal;
+    actualizarGastos(widget.usuario.id_usuario, sumaGasto);
+    actualizarIngresos(widget.usuario.id_usuario, sumaIngresos);
+    actualizarSaldoTotal(widget.usuario.id_usuario, saldoTotal);
   }
 
 }
