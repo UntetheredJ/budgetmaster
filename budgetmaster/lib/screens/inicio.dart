@@ -161,7 +161,7 @@ class Inicio extends StatelessWidget {
               ))),
         ),
         panelBuilder: (controller) => InicioWidget(
-          controller: controller,
+          controller: controller, usuario: usuario,
         ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
