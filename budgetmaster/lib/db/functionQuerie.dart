@@ -8,7 +8,6 @@ import 'package:budgetmaster/models/pago_periodico.dart';
 import 'package:budgetmaster/models/inversion.dart';
 import 'package:budgetmaster/models/ingreso.dart';
 
-
 Future<Usuario> login(String correo, String contrasenna) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
@@ -21,14 +20,8 @@ Future<Usuario> login(String correo, String contrasenna) async {
         .eq('contrasenna', contrasenna);
     if (data.isNotEmpty) {
       Map<String, dynamic> dato = data[0];
-      usuario = Usuario(
-          dato['id_usuario'],
-          dato['nombre'],
-          dato['usuario'],
-          dato['contrasenna'],
-          dato['saldo_total'],
-          dato['total_ahorrado']
-      );
+      usuario = Usuario(dato['id_usuario'], dato['nombre'], dato['usuario'],
+          dato['contrasenna'], dato['saldo_total'], dato['total_ahorrado']);
       debugPrint("Correcto");
       return usuario;
     } else {
@@ -40,16 +33,20 @@ Future<Usuario> login(String correo, String contrasenna) async {
   }
 }
 
-Future<int> registroUsuario(String nombre, String usuario, String contrasenna) async {
+Future<int> registroUsuario(
+    String nombre, String usuario, String contrasenna) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   try {
     var id = randomDigits(10);
-    await cliente
-        .from('usuario')
-        .insert(
-        {'id_usuario':id, 'nombre':nombre, 'usuario':usuario, 'contrasenna':contrasenna, 'saldo_total':0, 'total_ahorrado':0}
-    );
+    await cliente.from('usuario').insert({
+      'id_usuario': id,
+      'nombre': nombre,
+      'usuario': usuario,
+      'contrasenna': contrasenna,
+      'saldo_total': 0,
+      'total_ahorrado': 0
+    });
     debugPrint(id);
     debugPrint("Correcto");
     return 1;
@@ -65,9 +62,7 @@ Future<int> actualizarUsuario(String newusuario, String usuario) async {
   try {
     await cliente
         .from('usuario')
-        .update({ 'usuario': newusuario})
-        .match({ 'usuario': usuario }
-    );
+        .update({'usuario': newusuario}).match({'usuario': usuario});
     debugPrint("Correcto, correo actualizado");
     return 1;
   } catch (e) {
@@ -82,9 +77,7 @@ Future<int> actualizarContrasenna(String newcontrasenna, String usuario) async {
   try {
     await cliente
         .from('usuario')
-        .update({ 'contrasenna': newcontrasenna})
-        .match({ 'usuario': usuario }
-    );
+        .update({'contrasenna': newcontrasenna}).match({'usuario': usuario});
     debugPrint("Correcto, cambio de contraseña realizado");
     return 1;
   } catch (e) {
@@ -93,7 +86,8 @@ Future<int> actualizarContrasenna(String newcontrasenna, String usuario) async {
   }
 }
 
-Future<int> agregarPagoPeriodicoUsuario(String id_usuario, String descripcion, int valor, DateTime vencimineto) async {
+Future<int> agregarPagoPeriodicoUsuario(String id_usuario, String descripcion,
+    int valor, DateTime vencimineto) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   String id = randomDigits(10);
@@ -118,7 +112,8 @@ Future<int> eliminarPagoPeriodicoUsuario(String id_pago_periodico) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   try {
-    await cliente.from('pago_periodico')
+    await cliente
+        .from('pago_periodico')
         .delete()
         .match({"id_pago_periodico": id_pago_periodico});
     debugPrint("Correcto");
@@ -129,8 +124,8 @@ Future<int> eliminarPagoPeriodicoUsuario(String id_pago_periodico) async {
   }
 }
 
-
-Future<int> agregarGastoEspontaneoUsuario(String id_usuario,String descripcion, int valor, DateTime fecha) async {
+Future<int> agregarGastoEspontaneoUsuario(
+    String id_usuario, String descripcion, int valor, DateTime fecha) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   String id = randomDigits(10);
@@ -155,7 +150,8 @@ Future<int> eliminarGastoEspontaneoUsuario(String id_gasto_espontaneo) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   try {
-    await cliente.from('gasto_espontaneo')
+    await cliente
+        .from('gasto_espontaneo')
         .delete()
         .match({"id_gasto_espontaneo": id_gasto_espontaneo});
     debugPrint("Correcto");
@@ -166,7 +162,8 @@ Future<int> eliminarGastoEspontaneoUsuario(String id_gasto_espontaneo) async {
   }
 }
 
-Future<int> agregarInversionUsuario(String id_usuario, String descripcion, int valor, DateTime fecha) async {
+Future<int> agregarInversionUsuario(
+    String id_usuario, String descripcion, int valor, DateTime fecha) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   String id = randomDigits(10);
@@ -191,7 +188,8 @@ Future<int> eliminarInversion(String id_inversion) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   try {
-    await cliente.from('inversion')
+    await cliente
+        .from('inversion')
         .delete()
         .match({"id_inversion": id_inversion});
     debugPrint("Correcto");
@@ -202,7 +200,8 @@ Future<int> eliminarInversion(String id_inversion) async {
   }
 }
 
-Future<int> agregarIngreso(String id_usuario, String descripcion, int valor, DateTime fecha) async {
+Future<int> agregarIngreso(
+    String id_usuario, String descripcion, int valor, DateTime fecha) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   String id = randomDigits(10);
@@ -227,9 +226,7 @@ Future<int> eliminarIngreso(String id_ingreso) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   try {
-    await cliente.from('ingreso')
-        .delete()
-        .match({"id_ingreso": id_ingreso});
+    await cliente.from('ingreso').delete().match({"id_ingreso": id_ingreso});
     debugPrint("Correcto");
     return 1;
   } catch (e) {
@@ -300,21 +297,66 @@ Future<List<PagoPeriodico>> listaPagoPeriodico(String id_usuario) async {
   try {
     final data = await cliente
         .from('pago_periodico')
-        .select('id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
+        .select(
+            'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
         .eq('id_usuario', id_usuario);
     if (data.isNotEmpty) {
       for (var i in data) {
         Map<String, dynamic> dato = i;
         DateTime fecha_pago;
-        if (dato['fecha_pago']==null) {fecha_pago=DateTime(0,0,0,0,0,0,0,0);} else {fecha_pago=converDateTime(dato['fecha_pago']);}
+        if (dato['fecha_pago'] == null) {
+          fecha_pago = DateTime(0, 0, 0, 0, 0, 0, 0, 0);
+        } else {
+          fecha_pago = converDateTime(dato['fecha_pago']);
+        }
         PagoPeriodico pago = PagoPeriodico.usuario(
             id_pago_periodico: dato['id_pago_periodico'],
             descripcion: dato['descripcion'],
             valor: dato['valor'],
             fecha_pago: fecha_pago,
             vencimiento: converDateTime(dato['vencimiento']),
-            id_usuario: dato['id_usuario']
-        );
+            id_usuario: dato['id_usuario']);
+        listaPagoPeriodico.add(pago);
+      }
+      return listaPagoPeriodico;
+    } else {
+      return listaPagoPeriodico;
+    }
+  } catch (e) {
+    debugPrint(e.toString());
+    return listaPagoPeriodico;
+  }
+}
+
+Future<List<PagoPeriodico>> listaPagoPeriodicoFuturo(String id_usuario) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  DateTime today = DateTime.now();
+  SupabaseClient cliente = _supabaseService.client;
+  List<PagoPeriodico> listaPagoPeriodico = [];
+  try {
+    final data = await cliente
+        .from('pago_periodico')
+        .select(
+            'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
+        .eq('id_usuario', id_usuario)
+        .gte('vencimiento', today)
+        .order("vencimiento", ascending: true);
+    if (data.isNotEmpty) {
+      for (var i in data) {
+        Map<String, dynamic> dato = i;
+        DateTime fecha_pago;
+        if (dato['fecha_pago'] == null) {
+          fecha_pago = DateTime(0, 0, 0, 0, 0, 0, 0, 0);
+        } else {
+          fecha_pago = converDateTime(dato['fecha_pago']);
+        }
+        PagoPeriodico pago = PagoPeriodico.usuario(
+            id_pago_periodico: dato['id_pago_periodico'],
+            descripcion: dato['descripcion'],
+            valor: dato['valor'],
+            fecha_pago: fecha_pago,
+            vencimiento: converDateTime(dato['vencimiento']),
+            id_usuario: dato['id_usuario']);
         listaPagoPeriodico.add(pago);
       }
       return listaPagoPeriodico;
@@ -340,11 +382,11 @@ Future<List<Inversion>> listaInversion(String id_usuario) async {
       for (var i in data) {
         Map<String, dynamic> dato = i;
         Inversion inversion = Inversion.usuario(
-            id_inversion: dato['id_inversion'],
-            descripcion: dato['descripcion'],
-            valor: dato['valor'],
-            fecha: converDateTime(dato['fecha']),
-            id_usuario: dato['id_usuario'],
+          id_inversion: dato['id_inversion'],
+          descripcion: dato['descripcion'],
+          valor: dato['valor'],
+          fecha: converDateTime(dato['fecha']),
+          id_usuario: dato['id_usuario'],
         );
         listaInversiones.add(inversion);
       }
