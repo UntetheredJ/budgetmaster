@@ -1,16 +1,19 @@
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:budgetmaster/widgets/inicio_widget.dart';
 import 'package:budgetmaster/screens/service.dart';
 
 class Inicio extends StatelessWidget {
   final Usuario usuario;
-  const Inicio({Key? key, required this.usuario}) : super(key: key);
+  final panelController = PanelController();
+  Inicio({Key? key, required this.usuario}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final panelHeightClosed = MediaQuery.of(context).size.height * 0.2;
+    final currencyFormat = NumberFormat.simpleCurrency(locale: "es_US");
 
     return Scaffold(
       appBar: AppBar(
@@ -24,6 +27,7 @@ class Inicio extends StatelessWidget {
             )),
       ),
       body: SlidingUpPanel(
+        controller: panelController,
         minHeight: panelHeightClosed,
         //parallaxEnabled: true,
         //parallaxOffset: .5,
@@ -62,30 +66,23 @@ class Inicio extends StatelessWidget {
                   const SizedBox(height: 50),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                     Flexible(
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 18,
-                             color: Colors.black.withOpacity(0.7)
-                          ),
-                          children: const <TextSpan>[
-                            TextSpan(text: "Estos son tus "),
-                            TextSpan(
+                        child: RichText(
+                            text: TextSpan(
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black.withOpacity(0.7)),
+                                children: const <TextSpan>[
+                          TextSpan(text: "Estos son tus "),
+                          TextSpan(
                               text: "gastos",
-                              style: TextStyle(
-                                color: Colors.purple
-                              )
-                            ),
-                            TextSpan(text: " mensuales:")
-                          ]
-                        )
-                      )
-                    )
+                              style: TextStyle(color: Colors.purple)),
+                          TextSpan(text: " mensuales:")
+                        ])))
                   ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("\$1'160.000",
+                      Text(currencyFormat.format(usuario.total_gastos),
                           style: TextStyle(
                             fontSize: 34,
                             color: Colors.purple,
@@ -94,30 +91,23 @@ class Inicio extends StatelessWidget {
                   ),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                     Flexible(
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 18,
-                             color: Colors.black.withOpacity(0.7)
-                          ),
-                          children: const <TextSpan>[
-                            TextSpan(text: "Estos son tus "),
-                            TextSpan(
+                        child: RichText(
+                            text: TextSpan(
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black.withOpacity(0.7)),
+                                children: const <TextSpan>[
+                          TextSpan(text: "Estos son tus "),
+                          TextSpan(
                               text: "ingresos",
-                              style: TextStyle(
-                                color: Colors.purple
-                              )
-                            ),
-                            TextSpan(text: " mensuales:")
-                          ]
-                        )
-                      )
-                    )
+                              style: TextStyle(color: Colors.purple)),
+                          TextSpan(text: " mensuales:")
+                        ])))
                   ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("\$1'150.000",
+                      Text(currencyFormat.format(usuario.total_ingresos),
                           style: const TextStyle(
                             fontSize: 34,
                             color: Colors.purple,
@@ -127,30 +117,23 @@ class Inicio extends StatelessWidget {
                   const SizedBox(height: 50),
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                     Flexible(
-                      child: RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 18,
-                             color: Colors.black.withOpacity(0.7)
-                          ),
-                          children: const <TextSpan>[
-                            TextSpan(text: "Tu "),
-                            TextSpan(
+                        child: RichText(
+                            text: TextSpan(
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black.withOpacity(0.7)),
+                                children: const <TextSpan>[
+                          TextSpan(text: "Tu "),
+                          TextSpan(
                               text: "saldo disponible",
-                              style: TextStyle(
-                                color: Colors.purple
-                              )
-                            ),
-                            TextSpan(text: " es:")
-                          ]
-                        )
-                      )
-                    )
+                              style: TextStyle(color: Colors.purple)),
+                          TextSpan(text: " es:")
+                        ])))
                   ]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("\$${usuario.saldo_total}",
+                      Text(currencyFormat.format(usuario.saldo_total),
                           style: const TextStyle(
                             fontSize: 34,
                             color: Colors.purple,
@@ -161,13 +144,12 @@ class Inicio extends StatelessWidget {
               ))),
         ),
         panelBuilder: (controller) => InicioWidget(
-          controller: controller, usuario: usuario,
+          controller: controller,
+          usuario: usuario, 
+          panelController: panelController,
         ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
     );
   }
-
 }
-
-
