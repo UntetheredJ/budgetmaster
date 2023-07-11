@@ -2,7 +2,7 @@ import 'package:budgetmaster/screens/home_page.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetmaster/screens/create_account.dart';
-import 'package:budgetmaster/db/functionQuerie.dart';
+import 'package:budgetmaster/db/ControllerUsuario.dart';
 
 
 class LoginScreen extends StatefulWidget {

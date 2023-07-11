@@ -5,7 +5,11 @@ import 'package:budgetmaster/models/ingreso.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:budgetmaster/db/functionQuerie.dart';
+import 'package:budgetmaster/db/ControllerUsuario.dart';
+import 'package:budgetmaster/db/ControllerGastoEspontaneo.dart';
+import 'package:budgetmaster/db/ControllerPagoPeriodico.dart';
+import 'package:budgetmaster/db/ControllerInversion.dart';
+import 'package:budgetmaster/db/ControllerIngreso.dart';
 import 'package:budgetmaster/screens/service.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
@@ -21,6 +25,9 @@ class expenses_and_income extends StatefulWidget {
 }
 
 class _Expenses_and_income extends State<expenses_and_income> {
+  // Validacion
+  final _formKey = GlobalKey<FormState>();
+
   //Calculos
   late List<GastoEspontaneo> listGastoEspontaneo;
   late List<PagoPeriodico> listPagoPeriodico;
@@ -32,40 +39,18 @@ class _Expenses_and_income extends State<expenses_and_income> {
   // Formato
   final currencyFormat = NumberFormat.simpleCurrency(locale: "es_US");
 
-  // Pago Periodico
-  var descripcionPagoPeriodico = TextEditingController();
-  var valorPagoPeriodico = TextEditingController();
-  late DateTime fecha_vencimiento;
+  // Agregar Gasto
+  var descripcionGasto = TextEditingController();
+  var valorGasto = TextEditingController();
+  late DateTime fecha_gasto;
+
+  // Notificacion
   Random random =  Random();
 
-  // Gasto Espontaneo
-  var descripcionGastoEspontaneo = TextEditingController();
-  var valorGastoEspontaneoo = TextEditingController();
-  late DateTime fecha_gasto_espontaneo;
-
-  // Inversion
-  var descripcionInversion = TextEditingController();
-  var valorInversion = TextEditingController();
-  late DateTime fecha_inversion;
-
-  // Ingreso
-  var descripcionIngreso = TextEditingController();
-  var valorIngreso = TextEditingController();
-  late DateTime fecha_ingreso;
-
-  //Actualizar Pago Periodico
-  var actualizarDescripcionPagoPeriodico = TextEditingController();
-  var actualizarValorPagoPeriodico = TextEditingController();
-  late DateTime actualizar_fecha_vencimiento;
-
-  // Gasto Espontaneo
-  var ActualizarDescripcionGastoEspontaneo = TextEditingController();
-  var ActualizarValorGastoEspontaneoo = TextEditingController();
-  late DateTime actualizar_fecha_gasto_espontaneo;
-
-  // Inversion
-
-  // Ingreso
+  //Actualizar Datos
+  var actualizar_Descripcion = TextEditingController();
+  var actualizar_Valor = TextEditingController();
+  late DateTime actualizar_fecha;
 
   @override
   Widget build(BuildContext context) {
@@ -147,13 +132,13 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                         onChanged: (value) {
                                                           if (value == 1) {
                                                             Navigator.of(context).pop();
-                                                            mostrarRegistroGastoEspontaneo();
+                                                            mostrarRegistroGasto(1);
                                                           } else if (value == 2) {
                                                             Navigator.of(context).pop();
-                                                            mostrarRegistroPagoPeriodico();
+                                                            mostrarRegistroGasto(2);
                                                           } else if (value == 3) {
                                                             Navigator.of(context).pop();
-                                                            mostrarRegistroInversion();
+                                                            mostrarRegistroGasto(3);
                                                           }
                                                         },
                                                       ),
@@ -256,7 +241,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                 ),
                                                                 child: IconButton(
                                                                   onPressed: () {
-                                                                    actualizarGastoEspontaneo();
+                                                                    actualizarGasto(1, gastoEspontaneo.id_gasto);
                                                                   },
                                                                   icon: const Icon(
                                                                       Icons.edit,
@@ -287,6 +272,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                                 Navigator.pop(context);
                                                                                 int valor = await eliminarGastoEspontaneoUsuario(gastoEspontaneo.id_gasto);
                                                                                 if(valor == 1) {
+                                                                                  _loadData();
                                                                                   mostrarDialogoAceptado();
                                                                                 } else {
                                                                                   mostrarDialogoError();
@@ -397,7 +383,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                 ),
                                                                 child: IconButton(
                                                                   onPressed: () {
-
+                                                                    actualizarGasto(2, pago.id_gasto);
                                                                   },
                                                                   icon: const Icon(
                                                                       Icons.edit,
@@ -428,6 +414,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                                 Navigator.pop(context);
                                                                                 int valor = await eliminarPagoPeriodicoUsuario(pago.id_gasto);
                                                                                 if(valor == 1) {
+                                                                                  _loadData();
                                                                                   mostrarDialogoAceptado();
                                                                                 } else {
                                                                                   mostrarDialogoError();
@@ -536,7 +523,9 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                   color: Colors.amber,
                                                                 ),
                                                                 child: IconButton(
-                                                                  onPressed: () {},
+                                                                  onPressed: () {
+                                                                    actualizarGasto(3, inversion.id_gasto);
+                                                                  },
                                                                   icon: const Icon(
                                                                       Icons.edit,
                                                                       color: Colors.white,
@@ -566,6 +555,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                                 Navigator.pop(context);
                                                                                 int valor = await eliminarInversion(inversion.id_gasto);
                                                                                 if(valor == 1) {
+                                                                                  _loadData();
                                                                                   mostrarDialogoAceptado();
                                                                                 } else {
                                                                                   mostrarDialogoError();
@@ -642,7 +632,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                     ),
                                     child: IconButton(
                                       onPressed: () {
-                                        mostrarRegistroIngreso();
+                                        mostrarRegistroGasto(4);
                                       },
                                       icon: const Text(
                                         '+',
@@ -723,7 +713,9 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                               color: Colors.amber,
                                                             ),
                                                             child: IconButton(
-                                                              onPressed: () {},
+                                                              onPressed: () {
+                                                                actualizarGasto(4, ingreso.id_ingreso);
+                                                              },
                                                               icon: const Icon(
                                                                 Icons.edit,
                                                                 color: Colors.white,
@@ -755,6 +747,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                             Navigator.pop(context);
                                                                             int valor = await eliminarIngreso(ingreso.id_ingreso);
                                                                             if(valor == 1) {
+                                                                              _loadData();
                                                                               mostrarDialogoAceptado();
                                                                             } else {
                                                                               mostrarDialogoError();
@@ -840,7 +833,6 @@ class _Expenses_and_income extends State<expenses_and_income> {
             TextButton(
               child: Text("Ok"),
               onPressed: () {
-                _loadData();
                 Navigator.pop(context);
               },
             ),
@@ -881,7 +873,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
     calcularDatos(listGastoEspontaneo, listPagoPeriodico, listInversion, listIngreso);
   }
 
-  mostrarRegistroPagoPeriodico() {
+  mostrarRegistroGasto(int tipo) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -895,424 +887,156 @@ class _Expenses_and_income extends State<expenses_and_income> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          content:
-          SingleChildScrollView(
-            child:
-            ListBody(
-              children: [
-                const Text(
-                  "Descripcion:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold
+          content: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  const Text(
+                    "Descripcion:",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold
+                    ),
                   ),
-                ),
-                TextFormField(
-                  controller: descripcionPagoPeriodico,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: "Descripcion",
-                    border: OutlineInputBorder(),
+                  const SizedBox(
+                    height: 5,
                   ),
-                ),
-                const Text(
-                  "Valor:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  controller: valorPagoPeriodico,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: "Valor",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const Text(
-                  "Fecha Vencimineto:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    fecha_vencimiento = (await seleccionarFecha())!;
-                  },
-                  child: const Text('Seleccionar Fecha'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 45,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.purple),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      String descripcion_pago_periodico = descripcionPagoPeriodico.text;
-                      int valor_pago_periodico = int.parse(valorPagoPeriodico.text);
-                      int valor = await agregarPagoPeriodicoUsuario(
-                          widget.usuario.id_usuario,
-                          descripcion_pago_periodico,
-                          valor_pago_periodico,
-                          fecha_vencimiento);
-                      await initNotifications();
-                      mostrarNotification(
-                          valor_pago_periodico,
-                          'Recordatorio Pago',
-                          valorPagoPeriodico.text);
-                      if (valor == 1) {
-                        Navigator.of(context).pop();
-                        mostrarDialogoAceptado();
+                  TextFormField(
+                    controller: descripcionGasto,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: "Descripcion",
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor complete este campo';
+                      } else if (value.length > 12) {
+                        return 'El tamaño de la cadena es muy grande';
                       } else {
-                        Navigator.of(context).pop();
-                        mostrarDialogoError();
+                        return null;
                       }
                     },
-                    child:
-                    const Text(
-                      "Agregar Gasto",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
+                  ),
+                  const Text(
+                    "Valor:",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  TextFormField(
+                    controller: valorGasto,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: "Valor",
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor complete este campo';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const Text(
+                    "Fecha Vencimineto:",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  OutlinedButton(
+                    onPressed: () async {
+                      fecha_gasto = (await seleccionarFecha())!;
+                    },
+                    child: const Text('Seleccionar Fecha'),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 45,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.purple),
+                    child: MaterialButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String descripcion = descripcionGasto.text;
+                          int valor_pago = int.parse(valorGasto.text);
+                          var valor;
+                          if (tipo == 1) {
+                            valor = await agregarGastoEspontaneoUsuario(
+                                widget.usuario.id_usuario,
+                                descripcion,
+                                valor_pago,
+                                fecha_gasto);
+                          } else if (tipo == 2) {
+                            valor = await agregarPagoPeriodicoUsuario(
+                                widget.usuario.id_usuario,
+                                descripcion,
+                                valor_pago,
+                                fecha_gasto);
+                          } else if (tipo == 3) {
+                            valor = await agregarInversionUsuario(
+                                widget.usuario.id_usuario,
+                                descripcion,
+                                valor_pago,
+                                fecha_gasto);
+                          } else if (tipo == 4) {
+                            valor = await agregarIngreso(
+                                widget.usuario.id_usuario,
+                                descripcion,
+                                valor_pago,
+                                fecha_gasto);
+                          }
+                          if (valor == 1) {
+                            Navigator.of(context).pop();
+                            _loadData();
+                            mostrarDialogoAceptado();
+                          } else {
+                            Navigator.of(context).pop();
+                            mostrarDialogoError();
+                          }
+                        }
+                      },
+                      child:
+                      const Text(
+                        "Agregar Gasto",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            )
+          )
         );
       },
     );
   }
 
-  mostrarRegistroGastoEspontaneo() {
+  actualizarGasto(int tipo, String id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text(
-            "Ingresar datos",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                const Text(
-                  "Descripcion:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  controller: descripcionGastoEspontaneo,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: "Descripcion",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const Text(
-                  "Valor:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  controller: valorGastoEspontaneoo,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: "Valor",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const Text(
-                  "Fecha:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    fecha_gasto_espontaneo = (await seleccionarFecha())!;
-                  },
-                  child: const Text('Seleccionar Fecha'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 45,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.purple),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      String descripcion_gasto_espontaneo = descripcionGastoEspontaneo.text;
-                      int valor_gasto_espontaneo = int.parse(valorGastoEspontaneoo.text);
-                      int valor = await agregarGastoEspontaneoUsuario(
-                        widget.usuario.id_usuario,
-                        descripcion_gasto_espontaneo,
-                        valor_gasto_espontaneo,
-                        fecha_gasto_espontaneo,
-                      );
-                      if (valor == 1) {
-                        Navigator.of(context).pop();
-                        mostrarDialogoAceptado();
-                      } else {
-                        Navigator.of(context).pop();
-                        mostrarDialogoError();
-                      }
-                    },
-                    child:
-                    const Text(
-                      "Agregar Gasto",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  mostrarRegistroInversion() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "Ingresar datos",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content:
-          SingleChildScrollView(
-            child:
-            ListBody(
-              children: [
-                const Text(
-                  "Descripcion:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  controller: descripcionInversion,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: "Descripcion",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const Text(
-                  "Valor:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  controller: valorInversion,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: "Valor",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const Text(
-                  "Fecha:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    fecha_inversion = (await seleccionarFecha())!;
-                  },
-                  child: const Text('Seleccionar Fecha'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 45,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.purple),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      String descripcion_inversion = descripcionInversion.text;
-                      int valor_inversion = int.parse(valorInversion.text);
-                      int valor = await agregarInversionUsuario(
-                        widget.usuario.id_usuario,
-                        descripcion_inversion,
-                        valor_inversion,
-                        fecha_inversion,
-                      );
-                      if (valor == 1) {
-                        Navigator.of(context).pop();
-                        mostrarDialogoAceptado();
-                      } else {
-                        Navigator.of(context).pop();
-                        mostrarDialogoError();
-                      }
-                    },
-                    child:
-                    const Text(
-                      "Agregar Gasto",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  mostrarRegistroIngreso() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "Ingresar datos",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                const Text(
-                  "Descripcion:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  controller: descripcionIngreso,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: "Descripcion",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const Text(
-                  "Valor:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextFormField(
-                  controller: valorIngreso,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: "Valor",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const Text(
-                  "Fecha:",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    fecha_ingreso = (await seleccionarFecha())!;
-                  },
-                  child: const Text('Seleccionar Fecha'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 45,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.purple),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      String descripcion_ingreso = descripcionIngreso.text;
-                      int valor_ingreso = int.parse(valorIngreso.text);
-                      int valor = await agregarIngreso(
-                        widget.usuario.id_usuario,
-                        descripcion_ingreso,
-                        valor_ingreso,
-                        fecha_ingreso,
-                      );
-                      if (valor == 1) {
-                        Navigator.of(context).pop();
-                        mostrarDialogoAceptado();
-                      } else {
-                        Navigator.of(context).pop();
-                        mostrarDialogoError();
-                      }
-                    },
-                    child: const Text(
-                      "Agregar Ingreso",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  actualizarGastoEspontaneo() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "Actualizar datos de gasto esponteneo",
+            "Actualizar datos de gasto",
             style: TextStyle(
               fontSize: 20,
               color: Colors.black,
@@ -1323,123 +1047,171 @@ class _Expenses_and_income extends State<expenses_and_income> {
             child: ListBody(
               children: [
                 ElevatedButton.icon(
-                  icon:  const Icon(Icons.person_outline_sharp, size: 18),
+                  icon:  const Icon(Icons.article, size: 18),
                   label: const Text('Descripcion'),
                   onPressed: () {showDialog(context: context, builder: (BuildContext context){
                     return AlertDialog(
-                      title: const Text("Nombre:", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+                      title: const Text("Descripcion:", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
                       content: SingleChildScrollView(
-                        child: ListBody(
-                          children: [
-                            const Text(
-                              "Ingresar nueva descripcion",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.purple,
-                              ),
-                            ),
-                            const SizedBox(height: 20,),
-                            TextFormField(
-                              controller: ActualizarDescripcionGastoEspontaneo,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: const InputDecoration(
-                                labelText: "Descripcion",
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                            const SizedBox(height: 20,),
-                            Container(
-                              height: 45,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: Colors.purple),
-                              child: MaterialButton(
-                                onPressed: () async {
-                                  int valor = 1;
-                                  if (valor == 1) {
-                                    Navigator.of(context).pop();
-                                    mostrarDialogoAceptado();
-                                  } else {
-                                    Navigator.of(context).pop();
-                                    mostrarDialogoError();
-                                  }
-                                },
-                                child: const Text(
-                                  "Actializar descripcion",
+                          child: Form(
+                            key: _formKey,
+                            child: ListBody(
+                              children: [
+                                const Text(
+                                  "Ingresar nueva descripcion",
                                   style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
+                                    fontSize: 18,
+                                    color: Colors.purple,
                                   ),
                                 ),
-                              ),
+                                const SizedBox(height: 20,),
+                                TextFormField(
+                                  controller: actualizar_Descripcion,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: const InputDecoration(
+                                    labelText: "Descripcion",
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor complete este campo';
+                                    }  else if (value.length > 12) {
+                                      return 'El tamaño de la cadena es muy grande';
+                                    }else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                const SizedBox(height: 20,),
+                                Container(
+                                  height: 45,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      color: Colors.purple),
+                                  child: MaterialButton(
+                                    onPressed: () async {
+                                      if(_formKey.currentState!.validate()) {
+                                        var valor;
+                                        String descripcion = actualizar_Descripcion.text;
+                                        if (tipo == 1) {
+                                          valor = await actualizarDescripcionGastoEspontaneo(id, descripcion);
+                                        } else if (tipo == 2) {
+                                          valor = await actualizarDescripcionPagoPeriodico(id, descripcion);
+                                        } else if (tipo == 3) {
+                                          valor = await actualizarDescripcionInversion(id, descripcion);
+                                        } else if (tipo == 4) {
+                                          valor = await actualizarDescripcionIngreso(id, descripcion);
+                                        }
+                                        if (valor == 1) {
+                                          Navigator.of(context).pop();
+                                          _loadData();
+                                          mostrarDialogoAceptado();
+                                        } else {
+                                          Navigator.of(context).pop();
+                                          mostrarDialogoError();
+                                        }
+                                      }
+                                    },
+                                    child: const Text(
+                                      "Actualizar descripcion",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          )
                       ),
                     );
                   });},
                 ),
                 ElevatedButton.icon(
-                  icon:  const Icon(Icons.person_outline_sharp, size: 18),
+                  icon:  const Icon(Icons.paid, size: 18),
                   label: const Text('Valor'),
                   onPressed: () {showDialog(context: context, builder: (BuildContext context){
                     return AlertDialog(
                       title: const Text("Valor:", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
                       content: SingleChildScrollView(
-                        child: ListBody(
-                          children: [
-                            const Text(
-                              "Ingresar el nueva valor",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.purple,
+                        child: Form(
+                          key: _formKey,
+                          child: ListBody(
+                            children: [
+                              const Text(
+                                "Ingresar el nueva valor",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.purple,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 20,),
-                            TextFormField(
-                              controller: actualizarDescripcionPagoPeriodico,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: const InputDecoration(
-                                labelText: "Valor",
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                            const SizedBox(height: 20,),
-                            Container(
-                              height: 45,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: Colors.purple),
-                              child: MaterialButton(
-                                onPressed: () async {
-                                  int valor = 1;
-                                  if (valor == 1) {
-                                    Navigator.of(context).pop();
-                                    mostrarDialogoAceptado();
+                              const SizedBox(height: 20,),
+                              TextFormField(
+                                controller: actualizar_Valor,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: "Valor",
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor complete este campo';
                                   } else {
-                                    Navigator.of(context).pop();
-                                    mostrarDialogoError();
+                                    return null;
                                   }
                                 },
-                                child: const Text(
-                                  "Actualizar Valor",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
+                              ),
+                              const SizedBox(height: 20,),
+                              Container(
+                                height: 45,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.purple),
+                                child: MaterialButton(
+                                  onPressed: () async {
+                                    if(_formKey.currentState!.validate()) {
+                                      var valor;
+                                      int total =  int.parse(actualizar_Valor.text);
+                                      if (tipo == 1) {
+                                        valor = await actualizarValorGastoEspontaneo(id, total);
+                                      } else if (tipo == 2) {
+                                        valor = await actualizarValorPagoPeriodico(id, total);
+                                      } else if (tipo == 3) {
+                                        valor = await actualizarValorInversion(id, total);
+                                      } else if (tipo == 4) {
+                                        valor = await actualizarValorIngreso(id, total);
+                                      }
+                                      if (valor == 1) {
+                                        Navigator.of(context).pop();
+                                        _loadData();
+                                        mostrarDialogoAceptado();
+                                      } else {
+                                        Navigator.of(context).pop();
+                                        mostrarDialogoError();
+                                      }
+                                    }
+                                  },
+                                  child: const Text(
+                                    "Actualizar Valor",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
+                        )
                       ),
                     );
                   });},
                 ),
                 ElevatedButton.icon(
-                  icon:  const Icon(Icons.person_outline_sharp, size: 18),
+                  icon:  const Icon(Icons.event, size: 18),
                   label: const Text('Fecha'),
                   onPressed: () {showDialog(context: context, builder: (BuildContext context){
                     return AlertDialog(
@@ -1457,7 +1229,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                             const SizedBox(height: 20,),
                             OutlinedButton(
                               onPressed: () async {
-                                fecha_ingreso = (await seleccionarFecha())!;
+                                actualizar_fecha = (await seleccionarFecha())!;
                               },
                               child: const Text('Seleccionar Fecha'),
                             ),
@@ -1467,12 +1239,23 @@ class _Expenses_and_income extends State<expenses_and_income> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
-                                  color: Colors.purple),
+                                  color: Colors.purple
+                              ),
                               child: MaterialButton(
                                 onPressed: () async {
-                                  int valor = 1;
+                                  var valor;
+                                  if (tipo == 1) {
+                                    valor = await actualizarFechaGastoEspontaneo(id, actualizar_fecha);
+                                  } else if (tipo == 2) {
+                                    valor = await actualizarFechaPagoPeriodico(id, actualizar_fecha);
+                                  } else if (tipo == 3) {
+                                    valor = await actualizarFechaInversion(id, actualizar_fecha);
+                                  } else if (tipo == 4) {
+                                    valor = await actualizarFechaIngreso(id, actualizar_fecha);
+                                  }
                                   if (valor == 1) {
                                     Navigator.of(context).pop();
+                                    _loadData();
                                     mostrarDialogoAceptado();
                                   } else {
                                     Navigator.of(context).pop();
@@ -1502,7 +1285,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
     );
   }
 
-  calcularDatos(List<GastoEspontaneo> listGastoEspontaneo, List<PagoPeriodico> listPagoPeriodico, List<Inversion> listInversion, List<Ingreso> listIngreso,) {
+  calcularDatos(List<GastoEspontaneo> listGastoEspontaneo, List<PagoPeriodico> listPagoPeriodico, List<Inversion> listInversion, List<Ingreso> listIngreso) {
     int sumaGasto = listGastoEspontaneo.fold(0, (previousValue, element) {
       return previousValue + element.valor;
     });

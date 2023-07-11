@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:budgetmaster/db/functionQuerie.dart';
+import 'package:budgetmaster/db/ControllerPagoPeriodico.dart';
 import 'package:budgetmaster/models/pago_periodico.dart';
 import 'package:budgetmaster/screens/service.dart';
 import 'package:flutter/material.dart';
