@@ -11,15 +11,10 @@ import '../models/gasto_espontaneo.dart';
 import '../models/usuario.dart';
 
 class InicioWidget extends StatefulWidget {
-  final ScrollController controller;
   final PanelController panelController;
   final Usuario usuario;
 
-  const InicioWidget(
-      {Key? key,
-      required this.controller,
-      required this.panelController,
-      required this.usuario})
+  InicioWidget({Key? key, required this.panelController, required this.usuario})
       : super(key: key);
 
   @override
@@ -28,21 +23,50 @@ class InicioWidget extends StatefulWidget {
 
 class _InicioWidgetState extends State<InicioWidget> {
   Random random = Random();
+  late ScrollController scrollController;
+  bool isOpen = false;
+
   // Formato
   final currencyFormat = NumberFormat.simpleCurrency(locale: "es_US");
 
   @override
-  Widget build(BuildContext context) => ListView(
-        padding: EdgeInsets.zero,
-        controller: widget.controller,
-        children: <Widget>[
-          const SizedBox(height: 12),
-          buildDragHandle(),
-          const SizedBox(height: 4),
-          const Center(
-              child: Text("Próximos Pagos",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24))),
-          buildPagos(),
+  void initState() {
+    scrollController = ScrollController();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            flex: 1,
+            child: Column(
+              children: [
+                const SizedBox(height: 12),
+                buildDragHandle(),
+                //const SizedBox(height: 6),
+                const Center(
+                    child: Text("Próximos Pagos",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24))),
+              ],
+            ),
+          ),
+          Flexible(
+            flex: 5,
+            child: Container(
+              width: double.infinity,
+              child: GestureDetector(
+                onVerticalDragStart: (details) {
+                  (!details.localPosition.dy.isNegative)
+                      ? widget.panelController.hide()
+                      : null;
+                },
+                child: SingleChildScrollView(child: buildPagos()),
+              ),
+            ),
+          ),
           const SizedBox(height: 24),
         ],
       );
@@ -50,14 +74,14 @@ class _InicioWidgetState extends State<InicioWidget> {
   Widget buildPagos() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: FutureBuilder<List<PagoPeriodico>>(
-            future: listaPagoPeriodicoFuturo(widget.usuario.id_usuario),
+            future: listaPagoPeriodicoNull(widget.usuario.id_usuario),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text("Error al cargar los datos");
               } else {
-                List<PagoPeriodico> gastos = snapshot.data!;
+                List<PagoPeriodico> pagosPeriodicos = snapshot.data!;
                 return DataTable(
                     dividerThickness: 0,
                     dataRowMaxHeight: 75,
@@ -68,7 +92,7 @@ class _InicioWidgetState extends State<InicioWidget> {
                       DataColumn(label: Text("")),
                       DataColumn(label: Text("")),
                     ],
-                    rows: gastos.map((pagoPeriodico) {
+                    rows: pagosPeriodicos.map((pagoPeriodico) {
                       mostrarNotification(
                           random.nextInt(100),
                           "Recordatorio de Pago",
@@ -121,7 +145,10 @@ class _InicioWidgetState extends State<InicioWidget> {
                                   end: Alignment.bottomLeft),
                             ),
                             child: MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                actualizarFechaPagoPeriodico(
+                                    pagoPeriodico.id_gasto, DateTime.now());
+                              },
                               child: const Text("Pagar",
                                   style: TextStyle(
                                       fontSize: 20,
@@ -139,15 +166,27 @@ class _InicioWidgetState extends State<InicioWidget> {
         child: Center(
           child: Container(
             width: 30,
-            height: 5,
+            height: 30,
             decoration: BoxDecoration(
-                color: Colors.grey[300],
+                // color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(12)),
+            child: Icon(isOpen
+                ? Icons.keyboard_arrow_up_rounded
+                : Icons.keyboard_arrow_down_rounded),
           ),
         ),
       );
 
-  void togglePanel() => widget.panelController.isPanelOpen
-      ? widget.panelController.close()
-      : widget.panelController.open();
+  void togglePanel() {
+    setState(() {
+
+      if (widget.panelController.isPanelOpen) {
+        widget.panelController.close();
+        isOpen = true;
+      } else {
+        widget.panelController.open();
+        isOpen = false;
+      }
+    });
+  }
 }

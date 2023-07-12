@@ -42,13 +42,15 @@ Future<int> eliminarPagoPeriodicoUsuario(String id_pago_periodico) async {
   }
 }
 
-Future<int> actualizarDescripcionPagoPeriodico(String id_pago_periodico, String descripcion) async {
+Future<int> actualizarDescripcionPagoPeriodico(
+    String id_pago_periodico, String descripcion) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   try {
-    await cliente.from('pago_periodico')
-        .update({"descripcion": descripcion})
-        .match({"id_pago_periodico": id_pago_periodico});
+    await cliente
+        .from('pago_periodico')
+        .update({"descripcion": descripcion}).match(
+            {"id_pago_periodico": id_pago_periodico});
     debugPrint("Correcto");
     return 1;
   } catch (e) {
@@ -57,13 +59,13 @@ Future<int> actualizarDescripcionPagoPeriodico(String id_pago_periodico, String 
   }
 }
 
-Future<int> actualizarValorPagoPeriodico(String id_pago_periodico, int valor) async {
+Future<int> actualizarValorPagoPeriodico(
+    String id_pago_periodico, int valor) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   try {
-    await cliente.from('pago_periodico')
-        .update({"valor": valor})
-        .match({"id_pago_periodico": id_pago_periodico});
+    await cliente.from('pago_periodico').update({"valor": valor}).match(
+        {"id_pago_periodico": id_pago_periodico});
     debugPrint("Correcto");
     return 1;
   } catch (e) {
@@ -72,14 +74,16 @@ Future<int> actualizarValorPagoPeriodico(String id_pago_periodico, int valor) as
   }
 }
 
-Future<int> actualizarFechaPagoPeriodico(String id_pago_periodico, DateTime fecha) async {
+Future<int> actualizarFechaPagoPeriodico(
+    String id_pago_periodico, DateTime fecha) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   String fechaPosgress = convertDate(fecha);
   try {
-    await cliente.from('pago_periodico')
-        .update({"fecha_pago": fechaPosgress})
-        .match({"id_pago_periodico": id_pago_periodico});
+    await cliente
+        .from('pago_periodico')
+        .update({"fecha_pago": fechaPosgress}).match(
+            {"id_pago_periodico": id_pago_periodico});
     debugPrint("Correcto");
     return 1;
   } catch (e) {
@@ -96,7 +100,7 @@ Future<List<PagoPeriodico>> listaPagoPeriodico(String id_usuario) async {
     final data = await cliente
         .from('pago_periodico')
         .select(
-        'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
+            'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
         .eq('id_usuario', id_usuario);
     if (data.isNotEmpty) {
       for (var i in data) {
@@ -126,7 +130,7 @@ Future<List<PagoPeriodico>> listaPagoPeriodico(String id_usuario) async {
   }
 }
 
-Future<List<PagoPeriodico>> listaPagoPeriodicoFuturo(String id_usuario) async {
+Future<List<PagoPeriodico>> listaPagoPeriodicoNull(String id_usuario) async {
   final SupabaseService _supabaseService = SupabaseService();
   DateTime today = DateTime.now();
   SupabaseClient cliente = _supabaseService.client;
@@ -135,9 +139,11 @@ Future<List<PagoPeriodico>> listaPagoPeriodicoFuturo(String id_usuario) async {
     final data = await cliente
         .from('pago_periodico')
         .select(
-        'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
+            'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
         .eq('id_usuario', id_usuario)
-        .gte('vencimiento', today)
+        //.or('vencimiento.gte.$today, fecha_pago.is.null')
+        //.or('vencimiento.gte.$today')
+        //.gte('vencimiento', today)
         .order("vencimiento", ascending: true);
     if (data.isNotEmpty) {
       for (var i in data) {

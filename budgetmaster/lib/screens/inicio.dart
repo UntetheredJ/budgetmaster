@@ -5,14 +5,20 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:budgetmaster/widgets/inicio_widget.dart';
 import 'package:budgetmaster/screens/service.dart';
 
-class Inicio extends StatelessWidget {
+class Inicio extends StatefulWidget {
   final Usuario usuario;
-  final panelController = PanelController();
+
   Inicio({Key? key, required this.usuario}) : super(key: key);
 
   @override
+  State<Inicio> createState() => _InicioState();
+}
+
+class _InicioState extends State<Inicio> {
+  final panelController = PanelController();
+  @override
   Widget build(BuildContext context) {
-    final panelHeightClosed = MediaQuery.of(context).size.height * 0.2;
+    final panelHeightClosed = MediaQuery.of(context).size.height * 0.12;
     final currencyFormat = NumberFormat.simpleCurrency(locale: "es_US");
 
     return Scaffold(
@@ -27,8 +33,44 @@ class Inicio extends StatelessWidget {
             )),
       ),
       body: SlidingUpPanel(
+        panelBuilder: (scrollController) => InicioWidget(
+          usuario: widget.usuario,
+          panelController: panelController,
+        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        backdropEnabled: true,
+        isDraggable: false,
         controller: panelController,
         minHeight: panelHeightClosed,
+        /* collapsed: Column(
+          children: <Widget>[
+            const SizedBox(height: 12),
+            Center(
+              child: Container(
+                width: 30,
+                height: 5,
+                decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              color: Colors.white,
+              child: const Center(
+                child: Text(
+                  "Ver Próximos de Pagos",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold
+                    ),
+                ),
+              )
+            ),
+            const SizedBox(height: 12),
+          ],
+        ), */
         //parallaxEnabled: true,
         //parallaxOffset: .5,
         body: SafeArea(
@@ -55,7 +97,7 @@ class Inicio extends StatelessWidget {
                     children: [
                       Flexible(
                           child: Text(
-                        usuario.nombre,
+                        widget.usuario.nombre,
                         style: const TextStyle(
                           fontSize: 25,
                           color: Colors.purple,
@@ -82,7 +124,7 @@ class Inicio extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(currencyFormat.format(usuario.total_gastos),
+                      Text(currencyFormat.format(widget.usuario.total_gastos),
                           style: TextStyle(
                             fontSize: 34,
                             color: Colors.purple,
@@ -107,7 +149,7 @@ class Inicio extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(currencyFormat.format(usuario.total_ingresos),
+                      Text(currencyFormat.format(widget.usuario.total_ingresos),
                           style: const TextStyle(
                             fontSize: 34,
                             color: Colors.purple,
@@ -133,7 +175,7 @@ class Inicio extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(currencyFormat.format(usuario.saldo_total),
+                      Text(currencyFormat.format(widget.usuario.saldo_total),
                           style: const TextStyle(
                             fontSize: 34,
                             color: Colors.purple,
@@ -143,12 +185,6 @@ class Inicio extends StatelessWidget {
                 ],
               ))),
         ),
-        panelBuilder: (controller) => InicioWidget(
-          controller: controller,
-          usuario: usuario, 
-          panelController: panelController,
-        ),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
     );
   }
