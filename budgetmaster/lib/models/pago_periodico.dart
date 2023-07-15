@@ -5,6 +5,7 @@ class PagoPeriodico extends Gasto{
   DateTime vencimiento;
   String id_usuario;
   String id_familia;
+  String id_notificacion;
 
   PagoPeriodico({
     required String id_pago_periodico,
@@ -13,7 +14,8 @@ class PagoPeriodico extends Gasto{
     required this.fecha_pago,
     required this.vencimiento,
     required this.id_usuario,
-    required this.id_familia
+    required this.id_familia,
+    required this.id_notificacion
   }) : super(id_pago_periodico, descripcion, valor);
 
   PagoPeriodico.usuario({
@@ -23,7 +25,8 @@ class PagoPeriodico extends Gasto{
     required this.fecha_pago,
     required this.vencimiento,
     required this.id_usuario,
-    this.id_familia = 'null'
+    this.id_familia = 'null',
+    required this.id_notificacion
   }) : super(id_pago_periodico, descripcion, valor);
 
   PagoPeriodico.familia({
@@ -33,6 +36,7 @@ class PagoPeriodico extends Gasto{
     required this.fecha_pago,
     required this.vencimiento,
     required this.id_familia,
-    this.id_usuario = 'null'
+    this.id_usuario = 'null',
+    required this.id_notificacion
   }) : super(id_pago_periodico, descripcion, valor);
 }

@@ -26,6 +26,28 @@ Future<int> agregarInversionUsuario(
   }
 }
 
+Future<int> agregarInversionFamilia(
+    String id_familia, String descripcion, int valor, DateTime fecha) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  String id = randomDigits(10);
+  String fechaPostgres = convertDate(fecha);
+  try {
+    await cliente.from('inversion').insert({
+      'id_inversion': id,
+      'descripcion': descripcion,
+      'valor': valor,
+      'fecha': fechaPostgres,
+      'id_familia': id_familia,
+    });
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
 Future<int> eliminarInversion(String id_inversion) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
@@ -106,6 +128,37 @@ Future<List<Inversion>> listaInversion(String id_usuario) async {
           valor: dato['valor'],
           fecha: converDateTime(dato['fecha']),
           id_usuario: dato['id_usuario'],
+        );
+        listaInversiones.add(inversion);
+      }
+      return listaInversiones;
+    } else {
+      return listaInversiones;
+    }
+  } catch (e) {
+    debugPrint(e.toString());
+    return listaInversiones;
+  }
+}
+
+Future<List<Inversion>> listaInversionFamilia(String id_familia) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  List<Inversion> listaInversiones = [];
+  try {
+    final data = await cliente
+        .from('inversion')
+        .select('id_inversion, descripcion, valor, fecha, id_familia')
+        .eq('id_familia', id_familia);
+    if (data.isNotEmpty) {
+      for (var i in data) {
+        Map<String, dynamic> dato = i;
+        Inversion inversion = Inversion.familia(
+          id_inversion: dato['id_inversion'],
+          descripcion: dato['descripcion'],
+          valor: dato['valor'],
+          fecha: converDateTime(dato['fecha']),
+          id_familia: dato['id_familia'],
         );
         listaInversiones.add(inversion);
       }

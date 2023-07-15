@@ -42,7 +42,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
   // Agregar Gasto
   var descripcionGasto = TextEditingController();
   var valorGasto = TextEditingController();
-  late DateTime fecha_gasto;
+  DateTime fecha_gasto = DateTime.now();
 
   // Notificacion
   Random random =  Random();
@@ -50,7 +50,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
   //Actualizar Datos
   var actualizar_Descripcion = TextEditingController();
   var actualizar_Valor = TextEditingController();
-  late DateTime actualizar_fecha;
+  DateTime actualizar_fecha = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -1141,7 +1141,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                           child: ListBody(
                             children: [
                               const Text(
-                                "Ingresar el nueva valor",
+                                "Ingresar el nuevo valor",
                                 style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.purple,

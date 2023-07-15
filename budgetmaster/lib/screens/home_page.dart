@@ -4,6 +4,7 @@ import 'package:budgetmaster/screens/inicio.dart';
 import 'package:budgetmaster/screens/configuracion.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:budgetmaster/screens/expenses_and_income.dart';
+import 'package:budgetmaster/screens/family.dart';
 
 class HomePage extends StatefulWidget {
   final Usuario usuario;
@@ -14,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int index = 1;
+  int index = 2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
         color: Colors.deepPurple.shade200,
         animationDuration: const Duration(milliseconds:300),
         items: const [
+          Icon(Icons.group, color: Colors.white, size: 40,),
           Icon(Icons.account_balance_wallet_rounded, color: Colors.white, size: 40,),
           Icon(Icons.home,color: Colors.white,  size: 40),
           Icon(Icons.settings,color: Colors.white,  size: 40),
@@ -50,12 +52,15 @@ class _HomePageState extends State<HomePage> {
     Widget widget;
     switch (index) {
       case 0:
-        widget = expenses_and_income(usuario: usuario);
+        widget = family(usuario: usuario);
         break;
       case 1:
-        widget = Inicio(usuario: usuario);
+        widget = expenses_and_income(usuario: usuario);
         break;
       case 2:
+        widget = Inicio(usuario: usuario);
+        break;
+      case 3:
         widget = Configuracion(usuario: usuario);
         break;
       default:

@@ -26,6 +26,28 @@ Future<int> agregarPagoPeriodicoUsuario(String id_usuario, String descripcion,
   }
 }
 
+Future<int> agregarPagoPeriodicoFamilia(String id_familia, String descripcion,
+    int valor, DateTime vencimineto) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  String id = randomDigits(10);
+  String fechaVenciminetoPostgres = convertDate(vencimineto);
+  try {
+    await cliente.from('pago_periodico').insert({
+      'id_pago_periodico': id,
+      'descripcion': descripcion,
+      'valor': valor,
+      'vencimiento': fechaVenciminetoPostgres,
+      'id_familia': id_familia,
+    });
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
 Future<int> eliminarPagoPeriodicoUsuario(String id_pago_periodico) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
@@ -49,8 +71,8 @@ Future<int> actualizarDescripcionPagoPeriodico(
   try {
     await cliente
         .from('pago_periodico')
-        .update({"descripcion": descripcion}).match(
-            {"id_pago_periodico": id_pago_periodico});
+        .update({"descripcion": descripcion})
+        .match({"id_pago_periodico": id_pago_periodico});
     debugPrint("Correcto");
     return 1;
   } catch (e) {
@@ -111,13 +133,67 @@ Future<List<PagoPeriodico>> listaPagoPeriodico(String id_usuario) async {
         } else {
           fecha_pago = converDateTime(dato['fecha_pago']);
         }
+        String id_notificacion;
+        if (dato['id_notificacion'] == null) {
+          id_notificacion = "";
+        } else {
+          id_notificacion = dato['id_notificacion'];
+        }
         PagoPeriodico pago = PagoPeriodico.usuario(
             id_pago_periodico: dato['id_pago_periodico'],
             descripcion: dato['descripcion'],
             valor: dato['valor'],
             fecha_pago: fecha_pago,
             vencimiento: converDateTime(dato['vencimiento']),
-            id_usuario: dato['id_usuario']);
+            id_usuario: dato['id_usuario'],
+            id_notificacion: id_notificacion
+        );
+        listaPagoPeriodico.add(pago);
+      }
+      return listaPagoPeriodico;
+    } else {
+      return listaPagoPeriodico;
+    }
+  } catch (e) {
+    debugPrint(e.toString());
+    return listaPagoPeriodico;
+  }
+}
+
+Future<List<PagoPeriodico>> listaPagoPeriodicoFamilia(String id_familia) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  List<PagoPeriodico> listaPagoPeriodico = [];
+  try {
+    final data = await cliente
+        .from('pago_periodico')
+        .select(
+        'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_familia')
+        .eq('id_familia', id_familia);
+    if (data.isNotEmpty) {
+      for (var i in data) {
+        Map<String, dynamic> dato = i;
+        DateTime fecha_pago;
+        if (dato['fecha_pago'] == null) {
+          fecha_pago = DateTime(0, 0, 0, 0, 0, 0, 0, 0);
+        } else {
+          fecha_pago = converDateTime(dato['fecha_pago']);
+        }
+        String id_notificacion;
+        if (dato['id_notificacion'] == null) {
+          id_notificacion = "";
+        } else {
+          id_notificacion = dato['id_notificacion'];
+        }
+        PagoPeriodico pago = PagoPeriodico.familia(
+            id_pago_periodico: dato['id_pago_periodico'],
+            descripcion: dato['descripcion'],
+            valor: dato['valor'],
+            fecha_pago: fecha_pago,
+            vencimiento: converDateTime(dato['vencimiento']),
+            id_familia: dato['id_familia'],
+            id_notificacion: id_notificacion
+        );
         listaPagoPeriodico.add(pago);
       }
       return listaPagoPeriodico;
@@ -154,13 +230,21 @@ Future<List<PagoPeriodico>> listaPagoPeriodicoNull(String id_usuario) async {
         } else {
           fecha_pago = converDateTime(dato['fecha_pago']);
         }
+        String id_notificacion;
+        if (dato['id_notificacion'] == null) {
+          id_notificacion = "";
+        } else {
+          id_notificacion = dato['id_notificacion'];
+        }
         PagoPeriodico pago = PagoPeriodico.usuario(
             id_pago_periodico: dato['id_pago_periodico'],
             descripcion: dato['descripcion'],
             valor: dato['valor'],
             fecha_pago: fecha_pago,
             vencimiento: converDateTime(dato['vencimiento']),
-            id_usuario: dato['id_usuario']);
+            id_usuario: dato['id_usuario'],
+            id_notificacion: id_notificacion
+        );
         listaPagoPeriodico.add(pago);
       }
       return listaPagoPeriodico;

@@ -128,3 +128,26 @@ Future<int> actualizarSaldoTotal(String id_usuario, int saldo_total) async {
     return 0;
   }
 }
+
+Future<List<String>> listarId(String id_familia) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  List<String> lista = [];
+  try {
+    final data = await cliente
+        .from("usuario-familia")
+        .select("id_usuario")
+        .eq("id_familia", id_familia);
+    if (data.isNotEmpity) {
+      for (var i in data) {
+        Map<String, dynamic> dato = i;
+        String id = dato["id_usuario"];
+        lista.add(id);
+      }
+    }
+    return lista;
+  } catch (e) {
+    debugPrint(e.toString());
+    return lista;
+  }
+}
