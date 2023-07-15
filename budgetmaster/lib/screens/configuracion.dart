@@ -9,6 +9,7 @@ class Configuracion extends StatelessWidget {
 
 @override
 Widget build(BuildContext context) {
+  final screenWidth = MediaQuery.of(context).size.width;
   return Scaffold(
     appBar: AppBar(
       backgroundColor: const Color(0xFF7B1FA2),
@@ -37,9 +38,15 @@ Widget build(BuildContext context) {
               ),
               title: const Text('Inicio de sesión y seguridad'),
               // Contents
-              children: [
 
-                ElevatedButton.icon(
+                  children: [
+                    Container(
+                      height: 40,
+                      width: screenWidth*0.7,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.purple),
+                 child: ElevatedButton.icon(
                   icon:  const Icon(Icons.person_outline_sharp, size: 18),
                   label: const Text('Nombre'),
                   onPressed: () {showDialog(context: context, builder: (BuildContext context){
@@ -57,18 +64,28 @@ Widget build(BuildContext context) {
                               ),
                             ),
                             const SizedBox(height: 20,),
-
-
                           ],
+
+
+
                         ),
                       ),
                     );
 
                   });},
                 ),
+                    ),
+                    const SizedBox(height: 10,),
+
+                    Container(
+                      height: 40,
+                      width: screenWidth*0.7,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.purple),
 
 
-                ElevatedButton.icon(
+                child:ElevatedButton.icon(
                       icon:  const Icon(Icons.mail, size: 18),
                       label: const Text('Correo'),
                       onPressed: () {showDialog(context: context, builder: (BuildContext context){
@@ -102,8 +119,17 @@ Widget build(BuildContext context) {
 
                       });},
                     ),
+                    ),
+                    const SizedBox(height: 10,),
 
-                ElevatedButton.icon(
+                    Container(
+                      height: 40,
+                      width: screenWidth*0.7,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.purple),
+
+                child: ElevatedButton.icon(
                   icon:  const Icon(Icons.password, size: 18),
                   label: const Text('Contraseña'),
                   onPressed: () {showDialog(context: context, builder: (BuildContext context){
@@ -129,6 +155,8 @@ Widget build(BuildContext context) {
 
                   });},
                 ),
+                    ),
+                    const SizedBox(height: 10,),
 
 
               ],
