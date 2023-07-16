@@ -30,6 +30,25 @@ Future<Usuario> login(String correo, String contrasenna) async {
   }
 }
 
+Future<String> validar(String correo) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    final data = await cliente
+        .from('usuario')
+        .select()
+        .eq('usuario', correo);
+    if (data.isNotEmpty) {
+      return "Existe";
+    } else {
+      return "No existe";
+    }
+  } catch (e) {
+    debugPrint(e.toString());
+    return "Error";
+  }
+}
+
 Future<int> registroUsuario(
     String nombre, String usuario, String contrasenna) async {
   final SupabaseService _supabaseService = SupabaseService();
@@ -149,5 +168,26 @@ Future<List<String>> listarId(String id_familia) async {
   } catch (e) {
     debugPrint(e.toString());
     return lista;
+  }
+}
+
+Future<String> buscarIdPorCorreo(String correo) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    final data = await cliente
+        .from('usuario')
+        .select('id_usuario')
+        .eq('usuario', correo);
+    if (data.isNotEmpty) {
+      Map<String, dynamic> dato = data[0];
+      String id = dato["id_usuario"];
+      return id;
+    } else {
+      return "";
+    }
+  } catch (e) {
+    debugPrint(e.toString());
+    return "Error";
   }
 }

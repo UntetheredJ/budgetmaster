@@ -124,6 +124,7 @@ class _Family extends State<family>{
                                         idFamilia = familiaSeleccionada.id_familia;
                                         gastosFamilia = familiaSeleccionada.gasto_total;
                                         ingresosFamilia = familiaSeleccionada.saldo_total;
+                                        actualizarDatos();
                                       });
                                     },
                                   ),
@@ -627,6 +628,12 @@ class _Family extends State<family>{
     setState(() {
       _isLoading = false;
     });
+    actualizarDatos();
+  }
+
+  actualizarDatos() async {
+    listPagoPeriodico = await listaPagoPeriodicoFamilia(idFamilia);
+    listInversion = await listaInversionFamilia(idFamilia);
     calcularDatos(listPagoPeriodico, listInversion);
   }
 
@@ -1039,10 +1046,12 @@ class _Family extends State<family>{
         return previousValue + element.valor;
       });
       int saldo_total = ingresos! - sumaGasto;
-      ingresosFamilia = ingresos!;
-      gastosFamilia = sumaGasto;
-      saldoTotalFamilia = saldo_total;
-      familiaSeleccionada.saldo_total = ingresos;
+      setState(() {
+        ingresosFamilia = ingresos!;
+        gastosFamilia = sumaGasto;
+        saldoTotalFamilia = saldo_total;
+      });
+      familiaSeleccionada.ingreso_total = ingresos;
       familiaSeleccionada.gasto_total = sumaGasto;
       familiaSeleccionada.saldo_total = saldo_total;
       actualizarIngresoFamilia(idFamilia, ingresos);

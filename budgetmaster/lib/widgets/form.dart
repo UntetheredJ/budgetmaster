@@ -31,6 +31,26 @@ class MyCustomFormState extends State<MyCustomForm> {
   @override
   Widget build(BuildContext context) {
 
+    mostrarMensaje() {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Correcto"),
+            content: Text("Se ha creado correctamente"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Ok"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
@@ -185,50 +205,55 @@ class MyCustomFormState extends State<MyCustomForm> {
                 String usuario = usuarioController.text;
                 String contrasenna1 = contrasennaController1.text;
                 if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Realizando registro')),
-                  );
-                  int valor = await registroUsuario(nombre, usuario, contrasenna1);
-                  if (valor == 1) {
-                    // ignore: use_build_context_synchronously
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text("Correcto"),
-                          content: Text("Se ha creado correctamente"),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text("Ok"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        );
-                      },
+                  String val = await validar(usuario);
+                  if (val == "No existe") {
+                    // If the form is valid, display a snackbar. In the real world,
+                    // you'd often call a server or save the information in a database.
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Realizando registro')),
                     );
-                  }
-                } else {
-                   // ignore: use_build_context_synchronously
+                    int valor = await registroUsuario(nombre, usuario, contrasenna1);
+                    if (valor == 1) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                      mostrarMensaje();
+                    } else {
+                      // ignore: use_build_context_synchronously
                       showDialog(
-                       context: context,
-                       builder: (BuildContext context) {
-                        return const AlertDialog(
-                          title: Text("Ocurrió un error"),
-                           content: SingleChildScrollView(
-                              child: ListBody(
-                                 children: [
-                                   Text("No se pudo crear")
-                               ],
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialog(
+                              title: Text("Ocurrió un error"),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: [
+                                    Text("No se pudo crear correctamente")
+                                  ],
+                                ),
                               ),
-                            ),
-                         );
-                       }
+                            );
+                          }
                       );
                     }
+                  } else if (val == "Existe") {
+                    // ignore: use_build_context_synchronously
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const AlertDialog(
+                            title: Text("Ocurrió un error"),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: [
+                                  Text("Este Correo ya existe")
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                    );
+                  }
+                }
               },
 
               child: const Text(

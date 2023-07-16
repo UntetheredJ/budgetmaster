@@ -3,8 +3,108 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:budgetmaster/db/supabaseConnection.dart';
 import 'package:budgetmaster/models/familia.dart';
 import 'package:budgetmaster/models/usuario.dart';
-
 import 'ControllerUsuario.dart';
+import 'package:budgetmaster/functions.dart';
+
+Future<int> primerMiembro(String id_familia, String id_usuario) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    var id = randomDigits(10);
+    await cliente
+        .from('usuario_familia')
+        .insert({
+      'id_usuario_familia': id,
+      'id_usuario': id_usuario,
+      'id_familia': id_familia
+    });
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> crearFamilia(String nombre, String id_usuario) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    var id = randomDigits(10);
+    await cliente
+        .from('familia')
+        .insert({
+      'id_familia': id,
+      'nombre': nombre,
+      'total_ahorrado': 0,
+      'saldo_total': 0,
+      'gasto_total': 0,
+      'ingreso_total': 0
+    });
+    await primerMiembro(id, id_usuario);
+    debugPrint(id);
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> actualizarFamilia(String nombre, String id_familia) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente
+        .from('familia')
+        .update({'nombre': nombre})
+        .match({'id_familia': id_familia});
+    debugPrint("Correcto, correo actualizado");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> agregarMiembro(String correo, String id_familia) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    String id_usuario = await buscarIdPorCorreo(correo);
+    if (id_usuario != "" || id_usuario != "Error") {
+      var id = randomDigits(10);
+      await cliente.from('usuario_familia')
+          .insert({
+        'id_usuario_familia': id,
+        'id_usuario': id_usuario,
+        'id_familia': id_familia
+      });
+      debugPrint(id);
+      debugPrint("Correcto");
+    }
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> salirFamilia(String id_familia, String id_usuario) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente
+        .from("usuario_familia")
+        .delete()
+        .match({"id_usuario": id_usuario, "id_familia": id_familia});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
 
 Future<List<String>> listarIdFamilia(String id_usuario) async {
   final SupabaseService _supabaseService = SupabaseService();
