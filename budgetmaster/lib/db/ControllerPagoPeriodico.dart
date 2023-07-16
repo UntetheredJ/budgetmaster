@@ -5,7 +5,7 @@ import 'package:budgetmaster/functions.dart';
 import 'package:budgetmaster/models/pago_periodico.dart';
 
 Future<int> agregarPagoPeriodicoUsuario(String id_usuario, String descripcion,
-    int valor, DateTime vencimineto) async {
+    int valor, DateTime vencimineto, id_notificacion) async {
   final SupabaseService _supabaseService = SupabaseService();
   SupabaseClient cliente = _supabaseService.client;
   String id = randomDigits(10);
@@ -17,6 +17,7 @@ Future<int> agregarPagoPeriodicoUsuario(String id_usuario, String descripcion,
       'valor': valor,
       'vencimiento': fechaVenciminetoPostgres,
       'id_usuario': id_usuario,
+      'id_notificacion': id_notificacion,
     });
     debugPrint("Correcto");
     return 1;

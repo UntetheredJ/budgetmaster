@@ -70,6 +70,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
               color: Colors.white,
             )),
       ),
+
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _loadData,
@@ -121,13 +122,13 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                         items: const [
                                                           DropdownMenuItem(
                                                               value: 1,
-                                                              child: Text("Gasto Espontaneo")),
+                                                              child: Text("Gasto Espontáneo")),
                                                           DropdownMenuItem(
                                                               value: 2,
-                                                              child: Text("Pago Periodico")),
+                                                              child: Text("Pago Periódico")),
                                                           DropdownMenuItem(
                                                               value: 3,
-                                                              child: Text("Inversion")),
+                                                              child: Text("Inversión")),
                                                         ],
                                                         onChanged: (value) {
                                                           if (value == 1) {
@@ -136,6 +137,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                           } else if (value == 2) {
                                                             Navigator.of(context).pop();
                                                             mostrarRegistroGasto(2);
+
                                                           } else if (value == 3) {
                                                             Navigator.of(context).pop();
                                                             mostrarRegistroGasto(3);
@@ -208,7 +210,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                               ),
                                                               Row(
                                                                 children: [
-                                                                  Text("Espontaneo - "),
+                                                                  Text("Espontáneo - "),
                                                                   Text(
                                                                     currencyFormat.format(gastoEspontaneo.valor),
                                                                     style: const TextStyle(
@@ -259,10 +261,10 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                       builder: (BuildContext context) {
                                                                         return AlertDialog(
                                                                           title: Text("Validar"),
-                                                                          content: Text("¿Esta seguro que desaa eliminar?"),
+                                                                          content: Text("¿Está seguro que desaa eliminar?"),
                                                                           actions: <Widget>[
                                                                             TextButton(
-                                                                              child: Text("Si"),
+                                                                              child: Text("Sí"),
                                                                               onPressed: () async {
                                                                                 Navigator.pop(context);
                                                                                 int valor = await eliminarGastoEspontaneoUsuario(gastoEspontaneo.id_gasto);
@@ -396,10 +398,10 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                       builder: (BuildContext context) {
                                                                         return AlertDialog(
                                                                           title: Text("Validar"),
-                                                                          content: Text("¿Esta seguro que desaa eliminar?"),
+                                                                          content: Text("¿Está seguro que desaa eliminar?"),
                                                                           actions: <Widget>[
                                                                             TextButton(
-                                                                              child: Text("Si"),
+                                                                              child: Text("Sí"),
                                                                               onPressed: () async {
                                                                                 Navigator.pop(context);
                                                                                 int valor = await eliminarPagoPeriodicoUsuario(pago.id_gasto);
@@ -482,7 +484,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                               ),
                                                               Row(
                                                                 children: [
-                                                                  Text("Inversion - "),
+                                                                  Text("Inversión - "),
                                                                   Text(
                                                                     currencyFormat.format(inversion.valor),
                                                                     style: const TextStyle(
@@ -532,7 +534,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                       builder: (BuildContext context) {
                                                                         return AlertDialog(
                                                                           title: Text("Validar"),
-                                                                          content: Text("¿Esta seguro que desaa eliminar?"),
+                                                                          content: Text("¿Está seguro que desea eliminar?"),
                                                                           actions: <Widget>[
                                                                             TextButton(
                                                                               child: Text("Si"),
@@ -724,7 +726,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                   builder: (BuildContext context) {
                                                                     return AlertDialog(
                                                                       title: Text("Validar"),
-                                                                      content: Text("¿Esta seguro que desaa eliminar?"),
+                                                                      content: Text("¿Está seguro que desea eliminar?"),
                                                                       actions: <Widget>[
                                                                         TextButton(
                                                                           child: Text("Si"),
@@ -807,13 +809,41 @@ class _Expenses_and_income extends State<expenses_and_income> {
     );
   }
 
+  Future<String?> ConfigNotificacion() async {
+    String? _selectedTime;
+    final TimeOfDay? result = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        helpText: "Configurar hora de notificación",
+        confirmText: "Crear notificación",
+        cancelText: "Cancelar",
+        builder: (context, child) {
+          return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                // Using 12-Hour format
+                  alwaysUse24HourFormat: false),
+              // If you want 24-Hour format, just change alwaysUse24HourFormat to true
+              child: child!);
+        });
+    if (result != null) {
+      setState(() {
+        _selectedTime = result.format(context);
+        debugPrint(_selectedTime);
+      });
+    }
+
+    return _selectedTime;
+
+  }
+
+
   mostrarDialogoAceptado() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Correcto"),
-          content: Text("La operacion se ejecuto correctamente"),
+          content: Text("La operación se ejecutó correctamente"),
           actions: <Widget>[
             TextButton(
               child: Text("Ok"),
@@ -833,7 +863,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Error"),
-          content: Text("Ocurrio un error en la operacion"),
+          content: Text("Ocurrió un error en la operación"),
           actions: <Widget>[
             TextButton(
               child: Text("Ok"),
@@ -878,7 +908,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
               child: ListBody(
                 children: [
                   const Text(
-                    "Descripcion:",
+                    "Descripción:",
                     style: TextStyle(
                         fontSize: 15,
                         color: Colors.black,
@@ -892,7 +922,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                     controller: descripcionGasto,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      labelText: "Descripcion",
+                      labelText: "Descripción",
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -946,6 +976,8 @@ class _Expenses_and_income extends State<expenses_and_income> {
                     },
                     child: const Text('Seleccionar Fecha'),
                   ),
+
+
                   const SizedBox(
                     height: 10,
                   ),
@@ -968,11 +1000,50 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                 valor_pago,
                                 fecha_gasto);
                           } else if (tipo == 2) {
-                            valor = await agregarPagoPeriodicoUsuario(
-                                widget.usuario.id_usuario,
-                                descripcion,
-                                valor_pago,
-                                fecha_gasto);
+                            var h;
+
+                            h = await ConfigNotificacion();
+                            if(h.length == 7){
+                              int o =  int.parse(h[0]);
+                              int m = int.parse(h.substring(2, 4));
+                              if (h[5]=='P'){
+                                o = o+12;
+                              }
+                              var id_not = random.nextInt(100);
+                              valor = await agregarPagoPeriodicoUsuario(
+                                  widget.usuario.id_usuario,
+                                  descripcion,
+                                  valor_pago,
+                                  fecha_gasto,
+                                  id_not.toString());
+                              mostrarNotification(
+                                id_not,
+                                "Recordatorio de pago ${descripcion}",
+                                "${descripcion} por un valor de ${currencyFormat.format(valor_pago)}",
+                                o, m,
+                              );
+                            }
+                            if (h.length == 8){
+                             int o =  int.parse(h.substring(0, 2));
+                             int m = int.parse(h.substring(3, 5));
+                                 if (h[6]=='P'){
+                                   o = o+12;
+                                 }
+                             var id_not = random.nextInt(100);
+                             valor = await agregarPagoPeriodicoUsuario(
+                                 widget.usuario.id_usuario,
+                                 descripcion,
+                                 valor_pago,
+                                 fecha_gasto,
+                                 id_not.toString());
+                             mostrarNotification(
+                               random.nextInt(100),
+                               "Recordatorio de pago ${descripcion}",
+                               "${descripcion} por un valor de ${currencyFormat.format(valor_pago)}",
+                               o, m,
+                             );
+                              }
+
                           } else if (tipo == 3) {
                             valor = await agregarInversionUsuario(
                                 widget.usuario.id_usuario,
@@ -990,6 +1061,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                             Navigator.of(context).pop();
                             _loadData();
                             mostrarDialogoAceptado();
+
                           } else {
                             Navigator.of(context).pop();
                             mostrarDialogoError();
@@ -1033,17 +1105,17 @@ class _Expenses_and_income extends State<expenses_and_income> {
               children: [
                 ElevatedButton.icon(
                   icon:  const Icon(Icons.article, size: 18),
-                  label: const Text('Descripcion'),
+                  label: const Text('Descripción'),
                   onPressed: () {showDialog(context: context, builder: (BuildContext context){
                     return AlertDialog(
-                      title: const Text("Descripcion:", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
+                      title: const Text("Descripción:", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),),
                       content: SingleChildScrollView(
                           child: Form(
                             key: _formKey,
                             child: ListBody(
                               children: [
                                 const Text(
-                                  "Ingresar nueva descripcion",
+                                  "Ingresar nueva descripción",
                                   style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.purple,
@@ -1054,7 +1126,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                   controller: actualizar_Descripcion,
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: const InputDecoration(
-                                    labelText: "Descripcion",
+                                    labelText: "Descripción",
                                     border: OutlineInputBorder(),
                                   ),
                                   validator: (value) {
@@ -1099,7 +1171,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                       }
                                     },
                                     child: const Text(
-                                      "Actualizar descripcion",
+                                      "Actualizar descripción",
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
