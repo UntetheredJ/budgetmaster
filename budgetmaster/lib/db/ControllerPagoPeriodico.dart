@@ -208,7 +208,6 @@ Future<List<PagoPeriodico>> listaPagoPeriodicoFamilia(String id_familia) async {
 
 Future<List<PagoPeriodico>> listaPagoPeriodicoNull(String id_usuario) async {
   final SupabaseService _supabaseService = SupabaseService();
-  DateTime today = DateTime.now();
   SupabaseClient cliente = _supabaseService.client;
   List<PagoPeriodico> listaPagoPeriodico = [];
   try {

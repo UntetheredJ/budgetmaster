@@ -93,10 +93,6 @@ class _InicioWidgetState extends State<InicioWidget> {
                       DataColumn(label: Text("")),
                     ],
                     rows: pagosPeriodicos.map((pagoPeriodico) {
-                      mostrarNotification(
-                          random.nextInt(100),
-                          "Recordatorio de Pago",
-                          "${pagoPeriodico.descripcion} por un valor de ${currencyFormat.format(pagoPeriodico.valor)}");
                       return DataRow(cells: [
                         DataCell(Container(
                           width: 5,
