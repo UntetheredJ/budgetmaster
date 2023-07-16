@@ -135,10 +135,10 @@ Future<List<String>> listarId(String id_familia) async {
   List<String> lista = [];
   try {
     final data = await cliente
-        .from("usuario-familia")
+        .from("usuario_familia")
         .select("id_usuario")
         .eq("id_familia", id_familia);
-    if (data.isNotEmpity) {
+    if (data.isNotEmpty) {
       for (var i in data) {
         Map<String, dynamic> dato = i;
         String id = dato["id_usuario"];

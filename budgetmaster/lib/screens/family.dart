@@ -3,7 +3,6 @@ import 'package:budgetmaster/models/pago_periodico.dart';
 import 'package:budgetmaster/models/ingreso.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:budgetmaster/models/familia.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:budgetmaster/db/ControllerGastoEspontaneo.dart';
 import 'package:budgetmaster/db/ControllerPagoPeriodico.dart';
@@ -31,6 +30,7 @@ class _Family extends State<family>{
   var idFamilia = "";
   var gastosFamilia = 0;
   var ingresosFamilia = 0;
+  var saldoTotalFamilia = 0;
 
   Future<void> listarFamilias () async {
     List<Familia> listaF = await listarFamilia(widget.usuario.id_usuario);
@@ -229,7 +229,7 @@ class _Family extends State<family>{
                                                 listPagoPeriodico = pagos;
                                                 return DataTable(
                                                   dividerThickness: 0,
-                                                  dataRowHeight: 70,
+                                                  dataRowHeight: 60,
                                                   headingRowHeight: 0,
                                                   columnSpacing: 15,
                                                   columns: const [
@@ -238,11 +238,6 @@ class _Family extends State<family>{
                                                     DataColumn(label: Text("")),
                                                   ],
                                                   rows: pagos.map((pago) {
-                                                    mostrarNotification(
-                                                        random.nextInt(100),
-                                                        'Recordatorio Pago',
-                                                        '${pago.descripcion} por un valor de ${pago.valor}'
-                                                    );
                                                     return DataRow(cells: [
                                                       DataCell(
                                                         Container(
@@ -254,14 +249,18 @@ class _Family extends State<family>{
                                                       ),
                                                       DataCell(
                                                           Container(
-                                                            width: screenWidth*0.6,
+                                                            width: screenWidth*0.42,
                                                             child: Column(
                                                               children: [
-                                                                Text(
-                                                                  pago.descripcion,
-                                                                  style: const TextStyle(
-                                                                      fontSize: 20,
-                                                                      fontWeight: FontWeight.bold),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      pago.descripcion,
+                                                                      style: const TextStyle(
+                                                                          fontSize: 20,
+                                                                          fontWeight: FontWeight.bold),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                                 Row(
                                                                   children: [
@@ -371,7 +370,7 @@ class _Family extends State<family>{
                                                 listInversion = inversiones;
                                                 return DataTable(
                                                   dividerThickness: 0,
-                                                  dataRowHeight: 70,
+                                                  dataRowHeight: 60,
                                                   headingRowHeight: 0,
                                                   columnSpacing: 15,
                                                   columns: const [
@@ -380,11 +379,6 @@ class _Family extends State<family>{
                                                     DataColumn(label: Text("")),
                                                   ],
                                                   rows: inversiones.map((inversion) {
-                                                    mostrarNotification(
-                                                        random.nextInt(100),
-                                                        'Recordatorio Pago',
-                                                        '${inversion.descripcion} por un valor de ${inversion.valor}'
-                                                    );
                                                     return DataRow(cells: [
                                                       DataCell(
                                                         Container(
@@ -396,14 +390,18 @@ class _Family extends State<family>{
                                                       ),
                                                       DataCell(
                                                           Container(
-                                                            width: screenWidth*0.60,
+                                                            width: screenWidth*0.42,
                                                             child: Column(
                                                               children: [
-                                                                Text(
-                                                                  inversion.descripcion,
-                                                                  style: const TextStyle(
-                                                                      fontSize: 20,
-                                                                      fontWeight: FontWeight.bold),
+                                                                Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      inversion.descripcion,
+                                                                      style: const TextStyle(
+                                                                          fontSize: 20,
+                                                                          fontWeight: FontWeight.bold),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                                 Row(
                                                                   children: [
@@ -536,6 +534,25 @@ class _Family extends State<family>{
                                       margin: const EdgeInsets.all(10.0),
                                       child: Text(
                                         currencyFormat.format(ingresosFamilia),
+                                        style: const TextStyle(
+                                            fontSize: 20, color: Color(0xFF7B1FA2)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(10.0),
+                                      child: const Text(
+                                        "Saldo Total:",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                        currencyFormat.format(saldoTotalFamilia),
                                         style: const TextStyle(
                                             fontSize: 20, color: Color(0xFF7B1FA2)),
                                       ),
@@ -1011,13 +1028,27 @@ class _Family extends State<family>{
 
   calcularDatos(List<PagoPeriodico> listPagoPeriodico, List<Inversion> listInversion) {
     if (familiaSeleccionada != "") {
-      int ingresos = 0;
+      int? ingresos = 0;
       for (var miembro in familiaSeleccionada.miembros) {
-        //ingresos = ingresos + miembro.saldo_total;
-        debugPrint(miembro);
+        ingresos = (ingresos! + miembro.saldo_total) as int?;
       }
+      int sumaGasto = listPagoPeriodico.fold(0, (previousValue, element) {
+        return previousValue + element.valor;
+      });
+      sumaGasto = listInversion.fold(sumaGasto, (previousValue, element) {
+        return previousValue + element.valor;
+      });
+      int saldo_total = ingresos! - sumaGasto;
+      ingresosFamilia = ingresos!;
+      gastosFamilia = sumaGasto;
+      saldoTotalFamilia = saldo_total;
+      familiaSeleccionada.saldo_total = ingresos;
+      familiaSeleccionada.gasto_total = sumaGasto;
+      familiaSeleccionada.saldo_total = saldo_total;
+      actualizarIngresoFamilia(idFamilia, ingresos);
+      actualizarGastosFamilia(idFamilia, sumaGasto);
+      actualizarSaldoTotalFamilia(idFamilia, saldo_total);
     }
-
   }
 
 }

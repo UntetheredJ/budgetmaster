@@ -6,6 +6,7 @@ class Familia {
   int total_ahorrado;
   int saldo_total;
   int gasto_total;
+  int ingreso_total;
   List<Usuario> miembros;
 
   Familia(
@@ -14,6 +15,7 @@ class Familia {
       this.total_ahorrado,
       this.saldo_total,
       this.gasto_total,
+      this.ingreso_total,
       this.miembros
       );
 }

@@ -50,6 +50,7 @@ Future<List<Familia>> listarFamilia(String id_usuario) async {
             dato["total_ahorrado"],
             dato["saldo_total"],
             dato["gasto_total"],
+            dato["ingreso_total"],
             lista
         );
         familias.add(familia);
@@ -71,9 +72,9 @@ Future<List<Usuario>> listarUsuarioPorFamilia(String id_familia) async {
       for (var id in ids) {
         final data = await cliente
             .from("usuario")
-            .select("")
+            .select()
             .eq("id_usuario", id);
-        if (data.isNotEmpity) {
+        if (data.isNotEmpty) {
           Map<String, dynamic> dato = data[0];
           Usuario usuario = Usuario(
               dato["id_usuario"],
@@ -92,5 +93,50 @@ Future<List<Usuario>> listarUsuarioPorFamilia(String id_familia) async {
   } catch (e) {
     debugPrint(e.toString());
     return lista;
+  }
+}
+
+Future<int> actualizarIngresoFamilia(String id_familia, int ingresos) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('familia')
+        .update({"ingreso_total": ingresos})
+        .match({"id_familia": id_familia});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> actualizarGastosFamilia(String id_familia, int gastos) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('familia')
+        .update({"gasto_total": gastos})
+        .match({"id_familia": id_familia});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
+  }
+}
+
+Future<int> actualizarSaldoTotalFamilia(String id_familia, int saldo_total) async {
+  final SupabaseService _supabaseService = SupabaseService();
+  SupabaseClient cliente = _supabaseService.client;
+  try {
+    await cliente.from('familia')
+        .update({"saldo_total": saldo_total})
+        .match({"id_familia": id_familia});
+    debugPrint("Correcto");
+    return 1;
+  } catch (e) {
+    debugPrint(e.toString());
+    return 0;
   }
 }

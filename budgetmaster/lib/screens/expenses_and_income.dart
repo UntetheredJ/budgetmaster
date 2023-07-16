@@ -177,7 +177,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                               listGastoEspontaneo = gastos;
                                               return DataTable(
                                                 dividerThickness: 0,
-                                                dataRowHeight: 70,
+                                                dataRowHeight: 60,
                                                 headingRowHeight: 0,
                                                 columnSpacing: 15,
                                                 columns: const [
@@ -186,11 +186,6 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                   DataColumn(label: Text("")),
                                                 ],
                                                 rows: gastos.map((gastoEspontaneo) {
-                                                  mostrarNotification(
-                                                      random.nextInt(100),
-                                                      'Recordatorio Pago',
-                                                      '${gastoEspontaneo.descripcion} por un valor de ${gastoEspontaneo.valor}'
-                                                  );
                                                   return DataRow(cells: [
                                                     DataCell(
                                                       Container(
@@ -328,11 +323,6 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                   DataColumn(label: Text("")),
                                                 ],
                                                 rows: pagos.map((pago) {
-                                                  mostrarNotification(
-                                                      random.nextInt(100),
-                                                      'Recordatorio Pago',
-                                                      '${pago.descripcion} por un valor de ${pago.valor}'
-                                                  );
                                                   return DataRow(cells: [
                                                     DataCell(
                                                       Container(
@@ -470,11 +460,6 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                   DataColumn(label: Text("")),
                                                 ],
                                                 rows: inversiones.map((inversion) {
-                                                  mostrarNotification(
-                                                      random.nextInt(100),
-                                                      'Recordatorio Pago',
-                                                      '${inversion.descripcion} por un valor de ${inversion.valor}'
-                                                  );
                                                   return DataRow(cells: [
                                                     DataCell(
                                                       Container(

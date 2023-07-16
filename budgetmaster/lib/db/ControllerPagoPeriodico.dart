@@ -217,9 +217,7 @@ Future<List<PagoPeriodico>> listaPagoPeriodicoNull(String id_usuario) async {
         .select(
             'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
         .eq('id_usuario', id_usuario)
-        //.or('vencimiento.gte.$today, fecha_pago.is.null')
-        //.or('vencimiento.gte.$today')
-        //.gte('vencimiento', today)
+        .is_('fecha_pago', null)
         .order("vencimiento", ascending: true);
     if (data.isNotEmpty) {
       for (var i in data) {
