@@ -4,6 +4,7 @@ import 'package:budgetmaster/db/supabaseConnection.dart';
 import 'package:budgetmaster/functions.dart';
 import 'package:budgetmaster/models/gasto_espontaneo.dart';
 
+
 Future<int> agregarGastoEspontaneoUsuario(
     String id_usuario, String descripcion, int valor, DateTime fecha) async {
   final SupabaseService _supabaseService = SupabaseService();

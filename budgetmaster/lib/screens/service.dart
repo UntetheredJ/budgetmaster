@@ -17,8 +17,8 @@ Future<void> initNotifications() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
 
-Future<void> mostrarNotification(int id, String title, String body) async {
-  var dateTime = DateTime(DateTime.now().year, DateTime.now().month,DateTime.now().day, 21, 43, 0);
+Future<void> mostrarNotification(int id, String title, String body, int h, int m, ) async {
+  var dateTime = DateTime(DateTime.now().year, DateTime.now().month,DateTime.now().day, h, m, 0);
   tz.initializeTimeZones();
   await flutterLocalNotificationsPlugin.zonedSchedule(
     id,
@@ -40,4 +40,20 @@ Future<void> mostrarNotification(int id, String title, String body) async {
   );
 
 }
+Future<void> cancelNotifications(id_notification) async {
+  await flutterLocalNotificationsPlugin.cancel(id_notification);
+}
+
+Future<void> cancelAllNotifications() async {
+  await flutterLocalNotificationsPlugin.cancelAll();
+}
+
+
+
+
+
+
+
+
+
 

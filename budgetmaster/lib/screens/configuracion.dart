@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:budgetmaster/widgets/form_password.dart';
 import 'package:budgetmaster/widgets/form_email.dart';
+import 'package:budgetmaster/screens/service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../widgets/switch_notification.dart';
 
 class Configuracion extends StatelessWidget {
   final Usuario usuario;
@@ -191,21 +195,21 @@ Widget build(BuildContext context) {
             const ExpansionTile(
               leading:  CircleAvatar(
                 backgroundColor: Colors.deepPurpleAccent,
-                child: Icon(Icons.ring_volume_sharp, size: 20,),
+                child:  Icon(Icons.ring_volume_sharp, size: 20,),
               ),
               title: Text('Ajuste de Notificaciones'),
+
+
+
               // Contents
               children: [
-                ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.blue,
-                    ),
-                    title: Text('Blue')),
+                    SwitchExample(),
 
               ],
             ),
 
             const SizedBox(height: 10,),
+
             Container(
               height: 50,
               width: double.infinity,
@@ -219,6 +223,20 @@ Widget build(BuildContext context) {
 
                 child: MaterialButton(
                 onPressed: () async {
+                  List<PendingNotificationRequest> activeNotifications =
+                  await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+                  for (PendingNotificationRequest notification in activeNotifications) {
+                    debugPrint(notification.title);
+                    debugPrint(notification.body);
+                  }
+
+
+
+
+
+
+
+
 
                 },
                 child: const Text(
