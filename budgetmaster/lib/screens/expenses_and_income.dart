@@ -12,6 +12,7 @@ import 'package:budgetmaster/db/ControllerInversion.dart';
 import 'package:budgetmaster/db/ControllerIngreso.dart';
 import 'package:budgetmaster/screens/service.dart';
 import 'package:intl/intl.dart';
+import 'package:budgetmaster/screens/history.dart';
 import 'dart:math';
 
 class expenses_and_income extends StatefulWidget {
@@ -404,6 +405,8 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                               child: Text("Sí"),
                                                                               onPressed: () async {
                                                                                 Navigator.pop(context);
+                                                                                int id=int.parse(pago.id_notificacion);
+                                                                                cancelNotifications(id);
                                                                                 int valor = await eliminarPagoPeriodicoUsuario(pago.id_gasto);
                                                                                 if(valor == 1) {
                                                                                   _loadData();
@@ -599,6 +602,32 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                     ),
                                   ),
                                 ],
+                              ),
+                              Container(
+                                margin: const EdgeInsets.all(10.0),
+                                height: 40,
+                                width: 200,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: const Color(0xFF7B1FA2),
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>History(usuario: widget.usuario),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Text(
+                                    'Visualizar historial',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

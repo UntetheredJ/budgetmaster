@@ -142,8 +142,13 @@ class _InicioWidgetState extends State<InicioWidget> {
                             ),
                             child: MaterialButton(
                               onPressed: () {
+                                int id=int.parse(pagoPeriodico.id_notificacion);
+                                cancelNotifications(id);
                                 actualizarFechaPagoPeriodico(
                                     pagoPeriodico.id_gasto, DateTime.now());
+
+
+
                               },
                               child: const Text("Pagar",
                                   style: TextStyle(

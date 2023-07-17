@@ -2,6 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:budgetmaster/screens/service.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -40,7 +41,7 @@ Future<void> mostrarNotification(int id, String title, String body, int h, int m
   );
 
 }
-Future<void> cancelNotifications(id_notification) async {
+Future<void> cancelNotifications(int id_notification) async {
   await flutterLocalNotificationsPlugin.cancel(id_notification);
 }
 

@@ -123,7 +123,7 @@ Future<List<PagoPeriodico>> listaPagoPeriodico(String id_usuario) async {
     final data = await cliente
         .from('pago_periodico')
         .select(
-            'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
+            'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario, id_notificacion')
         .eq('id_usuario', id_usuario);
     if (data.isNotEmpty) {
       for (var i in data) {
@@ -140,6 +140,7 @@ Future<List<PagoPeriodico>> listaPagoPeriodico(String id_usuario) async {
         } else {
           id_notificacion = dato['id_notificacion'];
         }
+
         PagoPeriodico pago = PagoPeriodico.usuario(
             id_pago_periodico: dato['id_pago_periodico'],
             descripcion: dato['descripcion'],
@@ -169,7 +170,7 @@ Future<List<PagoPeriodico>> listaPagoPeriodicoFamilia(String id_familia) async {
     final data = await cliente
         .from('pago_periodico')
         .select(
-        'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_familia')
+        'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_familia,  id_notificacion')
         .eq('id_familia', id_familia);
     if (data.isNotEmpty) {
       for (var i in data) {
@@ -215,7 +216,7 @@ Future<List<PagoPeriodico>> listaPagoPeriodicoNull(String id_usuario) async {
     final data = await cliente
         .from('pago_periodico')
         .select(
-            'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario')
+            'id_pago_periodico, descripcion, valor, fecha_pago, vencimiento, id_usuario, id_notificacion')
         .eq('id_usuario', id_usuario)
         .is_('fecha_pago', null)
         .order("vencimiento", ascending: true);
