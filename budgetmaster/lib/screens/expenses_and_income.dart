@@ -262,7 +262,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                       builder: (BuildContext context) {
                                                                         return AlertDialog(
                                                                           title: Text("Validar"),
-                                                                          content: Text("¿Está seguro que desaa eliminar?"),
+                                                                          content: Text("¿Está seguro que desea eliminar?"),
                                                                           actions: <Widget>[
                                                                             TextButton(
                                                                               child: Text("Sí"),
@@ -399,7 +399,7 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                                                       builder: (BuildContext context) {
                                                                         return AlertDialog(
                                                                           title: Text("Validar"),
-                                                                          content: Text("¿Está seguro que desaa eliminar?"),
+                                                                          content: Text("¿Está seguro que desea eliminar?"),
                                                                           actions: <Widget>[
                                                                             TextButton(
                                                                               child: Text("Sí"),

@@ -83,7 +83,7 @@ class _Family extends State<family>{
         backgroundColor: const Color(0xFF7B1FA2),
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: const Text("Gastos e Ingresos",
+        title: const Text("Grupos",
             style: TextStyle(
               fontSize: 25,
               color: Colors.white,
@@ -316,7 +316,7 @@ class _Family extends State<family>{
                                                                         builder: (BuildContext context) {
                                                                           return AlertDialog(
                                                                             title: Text("Validar"),
-                                                                            content: Text("¿Esta seguro que desaa eliminar?"),
+                                                                            content: Text("¿Esta seguro que desea eliminar?"),
                                                                             actions: <Widget>[
                                                                               TextButton(
                                                                                 child: Text("Si"),
@@ -456,7 +456,7 @@ class _Family extends State<family>{
                                                                         builder: (BuildContext context) {
                                                                           return AlertDialog(
                                                                             title: Text("Validar"),
-                                                                            content: Text("¿Esta seguro que desaa eliminar?"),
+                                                                            content: Text("¿Esta seguro que desea eliminar?"),
                                                                             actions: <Widget>[
                                                                               TextButton(
                                                                                 child: Text("Si"),
