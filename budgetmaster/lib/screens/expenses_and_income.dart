@@ -603,32 +603,6 @@ class _Expenses_and_income extends State<expenses_and_income> {
                                   ),
                                 ],
                               ),
-                              Container(
-                                margin: const EdgeInsets.all(10.0),
-                                height: 40,
-                                width: 200,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: const Color(0xFF7B1FA2),
-                                ),
-                                child: IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>History(usuario: widget.usuario),
-                                      ),
-                                    );
-                                  },
-                                  icon: const Text(
-                                    'Visualizar historial',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ),
-                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

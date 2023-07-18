@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:budgetmaster/models/usuario.dart';
 import 'package:budgetmaster/widgets/form_password.dart';
 import 'package:budgetmaster/widgets/form_email.dart';
-import 'package:budgetmaster/screens/service.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../db/ControllerFamilia.dart';
+import '../main.dart';
 import '../models/familia.dart';
 import '../widgets/switch_notification.dart';
 
@@ -888,14 +887,12 @@ class _Configuracion extends State<Configuracion>{
                   ),
                   child: MaterialButton(
                     onPressed: () async {
-                      List<PendingNotificationRequest> activeNotifications =
-                          await flutterLocalNotificationsPlugin
-                              .pendingNotificationRequests();
-                      for (PendingNotificationRequest notification
-                          in activeNotifications) {
-                        debugPrint(notification.title);
-                        debugPrint(notification.body);
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Login(),
+                        ),
+                      );
                     },
                     child: const Text(
                       "Cerrar sesión",

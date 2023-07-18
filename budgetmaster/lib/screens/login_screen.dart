@@ -79,14 +79,6 @@ class LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: 5,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                      onPressed: () {},
-                      child: const Text("¿Olvidaste tu contraseña?"))
-                ],
-              ),
               const SizedBox(
                 height: 25,
               ),
